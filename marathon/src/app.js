@@ -21,8 +21,15 @@ var parseFinishingTime = function (str) {
   return timestampMinutes;
 };
 
+// Render finishing time as string
 var formatFinishingTime = function (time) {
+  var h = Math.floor(time / 60);
+  time %= 60;
+  var m = Math.floor(time);
+  time -= m;
+  var s = Math.floor(time * 60);
 
+  return `${h}h${m}m${s}s`;
 };
 
 var rowConverter = function (r) {
@@ -124,6 +131,46 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     },
   };
 
+  var mouseOverHandler = function handleMouseOverOnPlotPoint(d, i, nodes) {
+    // Get absolute (DOM) positions of elements in SVG element
+    var boundingRect = nodes[i].getBoundingClientRect();
+
+    var xPosition = boundingRect.left;
+    var yPosition = boundingRect.top;
+
+    var tooltip = d3.select('#tooltip');
+    var ttXOffset = -parseInt(tooltip.style('width')) / 2;
+
+    console.log(xPosition, ttXOffset);
+
+    // Style tooltip
+    tooltip.style('left', xPosition + ttXOffset - 10 + 'px')
+      .style('top', 10 + yPosition + 'px')
+      .select('#name')
+      .text(d.athlete);
+
+    tooltip.select('#year')
+      .text(d.year.getFullYear());
+
+    tooltip.select('#country')
+      .text(d.country);
+
+    // debugging
+
+    tooltip.select('#time')
+      .text(formatFinishingTime(d.time));
+
+    tooltip.select('#sex')
+      .text(d.sex === 'm' ? 'male' : 'female');
+
+    // Show tooltip
+    tooltip.classed('hidden', false);
+  };
+
+  var mouseOutHandler = function handleMouseOutOnPlotPoint(d, i, nodes) {
+    d3.select('#tooltip').classed('hidden', true);
+  };
+
   var malePoints = maleGroup.selectAll('rect')
     .data(maleRunners)
     .enter()
@@ -138,35 +185,8 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     })
     .attr('width', maleProps.dim.w)
     .attr('height', maleProps.dim.h)
-    .on('mouseover', (d, i, nodes) => {
-      var xPosition = parseFloat(d3.select(nodes[i]).attr('x'));
-      var yPosition = parseFloat(d3.select(nodes[i]).attr('y'));
-
-      var tooltip = d3.select('#tooltip');
-
-      tooltip.style('left', xPosition + 'px')
-        .style('top', yPosition + 'px')
-        .select('#name')
-        .text(d.athlete);
-
-      tooltip.select('#year')
-        .text(d.year.getFullYear());
-
-      tooltip.select('#country')
-        .text(d.country);
-
-      tooltip.select('#time')
-        .text(d.time);
-
-      tooltip.select('#sex')
-        .text(d.sex);
-
-      d3.select('#tooltip').classed('hidden', false);
-    })
-    .on('mouseout', () => {
-      d3.select('#tooltip').classed('hidden', true);
-    });
-
+    .on('mouseover', mouseOverHandler)
+    .on('mouseout', mouseOutHandler);
 
   var femalePoints = femaleGroup.selectAll('circle')
     .data(femaleRunners)
@@ -176,34 +196,8 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     .attr('cx', d => xScale(d.year))
     .attr('cy', d => yScale(d.time))
     .attr('r', femaleProps.dim.r)
-    .on('mouseover', (d, i, nodes) => {
-      var xPosition = parseFloat(d3.select(nodes[i]).attr('x'));
-      var yPosition = parseFloat(d3.select(nodes[i]).attr('y'));
-
-      var tooltip = d3.select('#tooltip');
-
-      tooltip.style('left', xPosition + 'px')
-        .style('top', yPosition + 'px')
-        .select('#name')
-        .text(d.athlete);
-
-      tooltip.select('#year')
-        .text(d.year.getFullYear());
-
-      tooltip.select('#country')
-        .text(d.country);
-
-      tooltip.select('#time')
-        .text(d.time);
-
-      tooltip.select('#sex')
-        .text(d.sex);
-
-      d3.select('#tooltip').classed('hidden', false);
-    })
-    .on('mouseout', () => {
-      d3.select('#tooltip').classed('hidden', true);
-    });
+    .on('mouseover', mouseOverHandler)
+    .on('mouseout', mouseOutHandler);
 
   // Add regression lines
 
@@ -251,8 +245,8 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       maleHidden = !maleHidden;
       maleGroup.classed('hidden', maleHidden);
     });
-    
-    d3.select('body').select('#legend-female')
+
+  d3.select('body').select('#legend-female')
     .on('click', () => {
       femaleHidden = !femaleHidden;
       femaleGroup.classed('hidden', femaleHidden);
