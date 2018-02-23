@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Marathon Plot</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="./styles/main.css" />
+  <script src="./lib/moment.js"></script>
+  <script src="./lib/d3/d3.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns" id="marathon-viz">
+        <div class="three columns" id="marathon-legend"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="twelve columns" id="plot-description">
+        <p>
+          <strong>Figure 1:</strong> Boston marathon data plotted for male and female runners.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="legend">
+        <table>
+          <col width="100">
+          <col width="100">
+
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>
+                <div class="symbol">
+                  <svg width="10px" height="10px">
+                    <rect class="male plot-point" width="5px" height="5px" x="2.5px" y="2.5px"></rect>
+                  </svg>
+                </div>
+              </td>
+              <td id="legend-male">
+                Male runner
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="symbol">
+                  <svg width="10px" height="10px">
+                    <circle class="female plot-point" cx="5px" cy="5px" r="2.5px"></circle>
+                  </svg>
+                </div>
+              </td>
+              <td id="legend-female">
+                Female runner
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip" class="hidden">
+    <p>
+      <strong>
+        <span id="name"></span>
+      </strong>
+    </p>
+    <p>
+      Year:
+      <span id="year"></span>
+    </p>
+    <p>
+      Country:
+      <span id="country"></span>
+    </p>
+    <p>
+      Time:
+      <span id="time"></span>
+    </p>
+    <p>
+      Sex:
+      <span id="sex"></span>
+    </p>
+  </div>
+
+  
+
+  <script src="./src/app.js"></script>
+</body>
+
+</html>
