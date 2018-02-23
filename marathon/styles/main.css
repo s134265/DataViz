@@ -1,0 +1,115 @@
+@import url('./skeleton/css/skeleton.css');
+@import url('./skeleton/css/normalize.css');
+
+/* for debugging */
+/* #marathon-viz {
+  border: 1px black solid;
+}
+
+#marathon-legend {
+  border: 1px blue solid;
+} */
+
+#marathon-svg {
+  display: block;
+  margin: auto;
+}
+
+#marathon-legend {
+  margin: auto;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: teal;
+  shape-rendering: crispEdges;
+}
+
+.plot-point {
+  fill: white;
+  fill-opacity: 0;
+}
+
+.male.plot-point {
+  stroke: red;
+  stroke-width: 1px;
+}
+
+.female.plot-point {
+  stroke: blue;
+  stroke-width: 1px;
+}
+
+path {
+  fill: none;
+}
+
+path.male {
+  stroke-opacity: 0.3;
+  stroke: red;
+}
+
+path.female {
+  stroke-opacity: 0.3;
+  stroke: blue;
+}
+
+.regression {
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 2, 3;
+}
+
+.male.regression {
+  stroke: red;
+}
+
+.female.regression {
+  stroke: blue;
+}
+
+#plot-description {
+  text-align: center;
+}
+
+.axis-label {
+  fill: black;
+  text-anchor: middle;
+}
+
+#legend .symbol {
+  display: inline;
+  margin-right: 15px;
+}
+
+#tooltip {
+  position: absolute;
+  width: 150px;
+  height: auto;
+  padding: 10px;
+  border: 1px solid grey;
+  background-color: white;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+.hidden {
+  display: none;
+}
+
+#tooltip p {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 10px;
+  line-height: 16px;
+}
