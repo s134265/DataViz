@@ -141,8 +141,6 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     var tooltip = d3.select('#tooltip');
     var ttXOffset = -parseInt(tooltip.style('width')) / 2;
 
-    console.log(xPosition, ttXOffset);
-
     // Style tooltip
     tooltip.style('left', xPosition + ttXOffset - 10 + 'px')
       .style('top', 10 + yPosition + 'px')
@@ -154,8 +152,6 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
     tooltip.select('#country')
       .text(d.country);
-
-    // debugging
 
     tooltip.select('#time')
       .text(formatFinishingTime(d.time));
