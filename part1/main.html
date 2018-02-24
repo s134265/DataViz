@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html --> 
+<meta name="src" content="main.tex"> 
+<meta name="date" content="2018-02-24 18:45:00"> 
+<link rel="stylesheet" type="text/css" href="main.css"> 
+</head><body 
+>
+<h3 class="likesectionHead"><a 
+ id="x1-1000"></a>Contents</h3>
+<div class="tableofcontents">
+<span class="sectionToc" >1 <a 
+href="#x1-20001" id="QQ2-1-2">DAOST Chapter 2 Questions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.1 <a 
+href="#x1-30001.1" id="QQ2-1-3">Jitter Plots</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.2 <a 
+href="#x1-40001.2" id="QQ2-1-4">Figure 2-3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.3 <a 
+href="#x1-50001.3" id="QQ2-1-5">Kernel Density Estimators</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.4 <a 
+href="#x1-60001.4" id="QQ2-1-6">The Cumulative Distribution Function</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.5 <a 
+href="#x1-70001.5" id="QQ2-1-7">Quantile Plot</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.6 <a 
+href="#x1-80001.6" id="QQ2-1-8">Probablity Plot</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.7 <a 
+href="#x1-90001.7" id="QQ2-1-9">Summary Statistics</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.8 <a 
+href="#x1-100001.8" id="QQ2-1-10">Box Plots</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.9 <a 
+href="#x1-110001.9" id="QQ2-1-11">Violin Plots</a></span>
+<br /><span class="sectionToc" >2 <a 
+href="#x1-120002" id="QQ2-1-12">DAOST Chapter 3 Questions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.1 <a 
+href="#x1-130002.1" id="QQ2-1-13">Figure 3-1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.2 <a 
+href="#x1-140002.2" id="QQ2-1-14">Multivariate Relationship</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.3 <a 
+href="#x1-150002.3" id="QQ2-1-15">Smoothing Noisy Data</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.4 <a 
+href="#x1-160002.4" id="QQ2-1-16">Residuals</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.5 <a 
+href="#x1-170002.5" id="QQ2-1-17">Smooth Tubes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.6 <a 
+href="#x1-180002.6" id="QQ2-1-18">Semi-log Plot</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.7 <a 
+href="#x1-190002.7" id="QQ2-1-19">Log-log Plot</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.8 <a 
+href="#x1-200002.8" id="QQ2-1-20">Banking</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.9 <a 
+href="#x1-210002.9" id="QQ2-1-21">Figure 3-14</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.10 <a 
+href="#x1-220002.10" id="QQ2-1-22">Discussion of Graphical Analysis and Presentation Graphics</a></span>
+</div>
+                                                                                            
+                                                                                            
+<h3 class="sectionHead"><span class="titlemark">1   </span> <a 
+ id="x1-20001"></a>DAOST Chapter 2 Questions</h3>
+<!--l. 62--><p class="noindent" >The answers to the questions for DAOST Chapter 2 are found in this section.
+<!--l. 64--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.1   </span> <a 
+ id="x1-30001.1"></a>Jitter Plots</h4>
+<!--l. 65--><p class="noindent" ><span 
+class="cmti-12">Explain in your own words the point of the jitter plot.</span>
+<!--l. 67--><p class="noindent" >When you plot data as points with only one attribute, you can get in trouble with scatter plots, since
+data can overlap. Jitter plots are a way to overcome this issue by implementing a random generated
+shift (the jitter) perpendicular to the attribute(<a 
+href="#XPhilippJanerta">1</a>). The shift of course has to be relatively small
+compared to the scale of the attribute, since the jitter can be mistaken for a 2D scatter plot
+otherwise.
+<!--l. 69--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.2   </span> <a 
+ id="x1-40001.2"></a>Figure 2-3</h4>
+<!--l. 70--><p class="noindent" ><span 
+class="cmti-12">Explain in your own words the point of figure 2-3.</span>
+<!--l. 72--><p class="noindent" >Figure 2-3 in DAOST showcases two different bin structures of the same data(<a 
+href="#XPhilippJanerta">1</a>). The point of the
+figure is that the visualization depends a lot on your choice of bin parameters - even the starting point
+of the first bin.
+<!--l. 74--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.3   </span> <a 
+ id="x1-50001.3"></a>Kernel Density Estimators</h4>
+<!--l. 75--><p class="noindent" ><span 
+class="cmti-12">When can KDEs be misleading?</span>
+<!--l. 77--><p class="noindent" >Kernel Density Estimators (KDE&#8217;s) are defined as(<a 
+href="#XPhilippJanerta">1</a>)
+<table 
+class="equation-star"><tr><td>
+<center class="math-display" >
+<img 
+src="main0x.png" alt="              &sum;N  1   ( x &minus; xi)
+Dh (x,{xi}) =     --K   ------
+              i=1 h       h
+" class="math-display" ></center></td></tr></table>
+<!--l. 81--><p class="nopar" >
+<!--l. 83--><p class="noindent" >The density, <span 
+class="cmmi-12">D</span><sub><span 
+class="cmmi-8">h</span></sub>, is a function of position, <span 
+class="cmmi-12">x</span>, and data point positions, <span 
+class="cmsy-10x-x-120">{</span><span 
+class="cmmi-12">x</span><sub><span 
+class="cmmi-8">i</span></sub><span 
+class="cmsy-10x-x-120">}</span>, with a smoothness
+defined by <span 
+class="cmmi-12">h</span>. Now, the smoothness parameter can be estimated by minimizing error in a cross
+validation procedure, but it is not possible just from inspection to tell whether this has been
+the case for the choice of <span 
+class="cmmi-12">h</span>. Thus, cheating with the actual smoothness of the graph is
+very easy, and why KDE&#8217;s can be misleading. Janert even proactively recommends to
+change the smoothness parameter from the optimal error, because it is inconveniently
+&#8221;wiggly&#8221;(<a 
+href="#XPhilippJanerta">1</a>).
+<!--l. 85--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.4   </span> <a 
+ id="x1-60001.4"></a>The Cumulative Distribution Function</h4>
+<!--l. 86--><p class="noindent" ><span 
+class="cmti-12">Janert writes &#8221;[CDFs] have less intuitive appeal than histograms of KDEs&#8221;. What does he mean by</span>
+<span 
+class="cmti-12">that?</span>
+<!--l. 88--><p class="noindent" >The cumulative distribution function (CDF) have the strength of showcasing in probabilities by
+interval. This comes at a price. Reading the probability of the interval is done by subtracting the
+intensities of the starting point and the end point in the chosen interval. Therefore, interpretation of
+the graph is not immediate and intuitive.
+<!--l. 90--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.5   </span> <a 
+ id="x1-70001.5"></a>Quantile Plot</h4>
+<!--l. 91--><p class="noindent" ><span 
+class="cmti-12">What is a Quantile plot? What is it good for?</span>
+<!--l. 93--><p class="noindent" >Quantile plots are for comparing two datasets. By sorting the data points and plotting points with the
+same rank in the sort against each other, you get a quantile plot(<a 
+href="#XPhilippJanerta">1</a>). Quantile plots can be used to
+compare whether two datasets are distributed equally and you can compare relative skewness of the
+two sets.
+<!--l. 95--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.6   </span> <a 
+ id="x1-80001.6"></a>Probablity Plot</h4>
+<!--l. 96--><p class="noindent" ><span 
+class="cmti-12">How is a Probablity plot defined? What is it useful for? Have you ever seen one before?</span>
+                                                                                            
+                                                                                            
+<!--l. 98--><p class="noindent" >A probability plot is defined as(<a 
+href="#XPhilippJanerta">1</a>)
+<table 
+class="equation-star"><tr><td>
+<center class="math-display" >
+<img 
+src="main1x.png" alt="            &minus;1
+xi = &mu; + &sigma;&Phi;   (y : i)
+" class="math-display" ></center></td></tr></table>
+<!--l. 102--><p class="nopar" >
+<!--l. 104--><p class="noindent" >where <span 
+class="cmmi-12">&mu; </span>is the mean of the data, <span 
+class="cmmi-12">&sigma; </span>is the standard deviation, &Phi;<sup><span 
+class="cmsy-8">&minus;</span><span 
+class="cmr-8">1</span></sup> is the inverse Gaussian, <span 
+class="cmmi-12">x</span><sub>
+<span 
+class="cmmi-8">i</span></sub> is the
+data point and <span 
+class="cmmi-12">y</span><sub><span 
+class="cmmi-8">i</span></sub> is the quantile of the corresponding data point. Thus, the theoretical Gaussian
+distribution will become a straight line. If the observed data assumes a straight line in the probability
+plot, then the data is assuming a Gaussian distribution too. Personally, I have never seen a
+probability plot before.
+<!--l. 107--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.7   </span> <a 
+ id="x1-90001.7"></a>Summary Statistics</h4>
+<!--l. 108--><p class="noindent" ><span 
+class="cmti-12">Explain why one has to be careful when using those - and why visualization of the full data is always</span>
+<span 
+class="cmti-12">better.</span>
+<!--l. 110--><p class="noindent" >Summary statistics have the issue of being identical for a lot of different relationships. As showcased
+in DAOST, the mean is equivalent for both a linear trend with an outlier and a clean non linear
+trend(<a 
+href="#XPhilippJanerta">1</a>). Thus, summary statistics fails often. The trends become immediately apparent from
+visualizing - even if the summary statistics works.
+<!--l. 112--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.8   </span> <a 
+ id="x1-100001.8"></a>Box Plots</h4>
+<!--l. 113--><p class="noindent" ><span 
+class="cmti-12">When are box plots most useful?</span>
+<!--l. 115--><p class="noindent" >Box plots show a lot of information. The median (the middle of the sorted data) and the interquartile
+range from (from quantale 1 to 3) are plotted as a box, and to extend it to a whisker plot, the 5th and
+95th quantile are lotted as error bars from the box(<a 
+href="#XPhilippJanerta">1</a>). The box plot shows what interval the centered
+half of the data is positioned and the whiskers show the same just for 90% of the data. Box plots are
+very useful for data where most of the data is centered around mean/median but outliers would
+                                                                                            
+                                                                                            
+distort a distribution.
+<!--l. 117--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.9   </span> <a 
+ id="x1-110001.9"></a>Violin Plots</h4>
+<!--l. 118--><p class="noindent" ><span 
+class="cmti-12">The book doesn&#8217;t mention violin plots. Are those better or worse than box plots? Why?</span>
+<!--l. 120--><p class="noindent" >Violin plots are box plots with a fitted normal distribution on each side instead of a box to symbolize
+the interquartile range(<a 
+href="#XWikipedia1">2</a>). Violin plots convey more information as they include median and mean,
+variance and quantiles, and the skewness of the fitted normal distribution. However, the information
+conveyed is not made the most intuitive way, so splitting into a box plot and histogram with a fitted
+normal density will illustrate your point more immediately.
+<h3 class="sectionHead"><span class="titlemark">2   </span> <a 
+ id="x1-120002"></a>DAOST Chapter 3 Questions</h3>
+<!--l. 122--><p class="noindent" >The answers to the questions for DAOST Chapter 3 are found in this section.
+<!--l. 124--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.1   </span> <a 
+ id="x1-130002.1"></a>Figure 3-1</h4>
+<!--l. 125--><p class="noindent" ><span 
+class="cmti-12">Looking at Fig 3-1, Janert writes &#8221;the data itself shows clearly that the amount of random noise in the</span>
+<span 
+class="cmti-12">data is small&#8221;. What do you think his argument is?</span>
+<!--l. 127--><p class="noindent" >In figure 3-1 in DAOST, a periodic relationship with a decrease of amplitude is present(<a 
+href="#XPhilippJanert">3</a>).
+Comparing to the trend, the data does not seem to vary too much, and thus the noise is
+small.
+<!--l. 129--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.2   </span> <a 
+ id="x1-140002.2"></a>Multivariate Relationship</h4>
+<!--l. 130--><p class="noindent" ><span 
+class="cmti-12">Can you think of a real-world example of a multivariate relationship like the one in Fig 3-3 (lower</span>
+<span 
+class="cmti-12">right panel)?</span>
+<!--l. 132--><p class="noindent" >Figure 3-3 refers to a multivariate relationship in the bottom(<a 
+href="#XPhilippJanert">3</a>). One relationship could be the
+vibrational energy (phonon) in a crystal as a function wavevector (dispersion relation) for a diatomic
+chain(<a 
+href="#XWikipedia">4</a>).
+                                                                                            
+                                                                                            
+<!--l. 134--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.3   </span> <a 
+ id="x1-150002.3"></a>Smoothing Noisy Data</h4>
+<!--l. 135--><p class="noindent" ><span 
+class="cmti-12">What are the two methods Janert metions for smoothing noisy data? Can you think of other</span>
+<span 
+class="cmti-12">ones?</span>
+<!--l. 137--><p class="noindent" >Janert mentions two methods; splines and LOESS. Splines are about splitting up regionally, making
+local polynomials and joining them again in a smooth way by making an optimization goal
+globally(<a 
+href="#XPhilippJanert">3</a>). Thus, the local smoothness criteria is at the joints and the global smoothness criteria
+is optimized. LOESS is more locally focused. It uses a linear combination of low order
+polynomial regression (often linear) and a weight function to the polynomials closest to point of
+interest(<a 
+href="#XPhilippJanerta">1</a>)
+<table 
+class="equation-star"><tr><td>
+<center class="math-display" >
+<img 
+src="main2x.png" alt="           (       )
+ 2   &sum;       x-&minus;-xi               2
+&chi;  =     w     h     (a + bxi &minus; yi) ,
+       i
+" class="math-display" ></center></td></tr></table>
+<!--l. 142--><p class="nopar" >
+<!--l. 144--><p class="noindent" >where <span 
+class="cmmi-12">chi</span><sup><span 
+class="cmr-8">2</span></sup> is the function being minimized with respect to the coefficients <span 
+class="cmmi-12">a </span>and <span 
+class="cmmi-12">b</span>.
+<!--l. 146--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.4   </span> <a 
+ id="x1-160002.4"></a>Residuals</h4>
+<!--l. 147--><p class="noindent" ><span 
+class="cmti-12">What are residuals? Why is it a good idea to plot the residuals of your fit?</span>
+<!--l. 149--><p class="noindent" >Residuals are the absolute value of the difference between your fit and your actual target(<a 
+href="#XPhilippJanert">3</a>). Plotting
+residuals gives the observer a sense of where the error is high and low in your fit locally, which gives
+an overview of your performance of the solution.
+<!--l. 151--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.5   </span> <a 
+ id="x1-170002.5"></a>Smooth Tubes</h4>
+                                                                                            
+                                                                                            
+<!--l. 152--><p class="noindent" ><span 
+class="cmti-12">Explain in your own words the point of the smooth tube in figure 3-7.</span>
+<!--l. 154--><p class="noindent" >Smooth tubes are basically a splitting of the smoothing methods into positive and negative
+residuals, which will introduce curves on each side on the original fit. Those curves can then
+act as confidence intervals(<a 
+href="#XPhilippJanert">3</a>), which also gives an overview of local performance of the
+solution.
+<!--l. 156--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.6   </span> <a 
+ id="x1-180002.6"></a>Semi-log Plot</h4>
+<!--l. 157--><p class="noindent" ><span 
+class="cmti-12">What kind of relationships will a semi-log plot help you discover?</span>
+<!--l. 159--><p class="noindent" >Semi-log plots are used to reveal exponential behavior of a function since
+<table 
+class="align-star">
+                                 <tr><td 
+class="align-odd"><span 
+class="cmmi-12">y</span></td>                                     <td 
+class="align-even"> = <span 
+class="cmmi-12">b </span><span 
+class="cmsy-10x-x-120">&sdot; </span><span 
+class="cmmi-12">a</span><sup><span 
+class="cmmi-8">x</span></sup> <span 
+class="cmsy-10x-x-120">&rArr;</span></td>                                           <td 
+class="align-label"></td>                                 <td 
+class="align-label">
+                                 </td></tr><tr><td 
+class="align-odd"><span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">y</span>)</td>                                 <td 
+class="align-even"> = <span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">b</span>) + <span 
+class="cmmi-12">x </span><span 
+class="cmsy-10x-x-120">&sdot; </span><span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">a</span>)<span 
+class="cmmi-12">,</span></td>                                 <td 
+class="align-label"></td>                                 <td 
+class="align-label"></td></tr></table>
+<!--l. 165--><p class="noindent" >and can thus easily be plotted against a line.
+<!--l. 167--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.7   </span> <a 
+ id="x1-190002.7"></a>Log-log Plot</h4>
+<!--l. 168--><p class="noindent" ><span 
+class="cmti-12">What kind of functions will loglog plots help you see?</span>
+<!--l. 170--><p class="noindent" >Log-log plots are used to reveal polynomial behavior of a function since
+                                                                                            
+                                                                                            
+<table 
+class="align-star">
+                                 <tr><td 
+class="align-odd"><span 
+class="cmmi-12">y</span></td>                                     <td 
+class="align-even"> = <span 
+class="cmmi-12">b </span><span 
+class="cmsy-10x-x-120">&sdot; </span><span 
+class="cmmi-12">x</span><sup><span 
+class="cmmi-8">a</span></sup> <span 
+class="cmsy-10x-x-120">&rArr;</span></td>                                           <td 
+class="align-label"></td>                                 <td 
+class="align-label">
+                                 </td></tr><tr><td 
+class="align-odd"><span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">y</span>)</td>                                 <td 
+class="align-even"> = <span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">b</span>) + <span 
+class="cmmi-12">a </span><span 
+class="cmsy-10x-x-120">&sdot; </span><span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">x</span>)<span 
+class="cmmi-12">,</span></td>                                 <td 
+class="align-label"></td>                                 <td 
+class="align-label"></td></tr></table>
+<!--l. 176--><p class="noindent" >and can thus easily be plotted against a line.
+<!--l. 178--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.8   </span> <a 
+ id="x1-200002.8"></a>Banking</h4>
+<!--l. 179--><p class="noindent" ><span 
+class="cmti-12">What the h#ll is banking and what element from our visual system does it use to help us see patterns?</span>
+<span 
+class="cmti-12">What are potential problems with banking?</span>
+<!--l. 181--><p class="noindent" >Banking is about changing aspect ratio so the slopes are in an approximate 45 degree
+angle(<a 
+href="#XPhilippJanert">3</a>), so the slope because a lot easier for us to process. In banking, aspect ratio of
+the plot can get too compressed for us to properly see the figure. If the figure gets too
+compressed, then cut-and-stack can be used to reduce a scale while still being able to use
+banking(<a 
+href="#XPhilippJanert">3</a>).
+<!--l. 183--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.9   </span> <a 
+ id="x1-210002.9"></a>Figure 3-14</h4>
+<!--l. 184--><p class="noindent" ><span 
+class="cmti-12">I think figure 3-14 makes an important point about linear fits that is rarely made. What is</span>
+<span 
+class="cmti-12">it?</span>
+<!--l. 186--><p class="noindent" >Figure 3-14 in DAOST is about making linear regression with opposite features and targets (x on y
+and y on x)(<a 
+href="#XPhilippJanert">3</a>). The point is that the regression fits are not the same, because the data is not
+completely (100%) linearly correlated, and thus not the best fit after all.
+                                                                                            
+                                                                                            
+<!--l. 188--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.10   </span> <a 
+ id="x1-220002.10"></a>Discussion of Graphical Analysis and Presentation Graphics</h4>
+<!--l. 189--><p class="noindent" ><span 
+class="cmti-12">Summarize the discussion of Graphical Analysis and Presentation Graphics on pp. 68-69 in your own</span>
+<span 
+class="cmti-12">words.</span>
+<!--l. 191--><p class="noindent" >The discussion are about best practices for analyzing data with graphs versus presenting results
+with graphs. Basically the recommendation are the opposite for both. Do not use time
+explanatory texts or effects for graphical analysis, but most certainly do it for presenting
+graphics. Making well explained graphs, Janart includes a list(<a 
+href="#XPhilippJanert">3</a>) of items which basically
+is;
+      <ul class="itemize1">
+      <li class="itemize">basic information on graph,
+      </li>
+      <li class="itemize">include axis labels,
+      </li>
+      <li class="itemize">no nonstandard abbreviations,
+      </li>
+      <li class="itemize">pick suitable font and font-size,
+      </li>
+      <li class="itemize">explain error bars,
+      </li>
+      <li class="itemize">choose appropiate plot ranges,
+      </li>
+      <li class="itemize">proofread and
+      </li>
+      <li class="itemize">use scalable formats.</li></ul>
+<!--l. 202--><p class="noindent" >At last, taste can be acquired by studying graphs, which visualization is all about.
+<!--l. 1--><p class="noindent" >
+<h3 class="likesectionHead"><a 
+ id="x1-230002.10"></a>References</h3>
+<!--l. 1--><p class="noindent" >
+   <div class="thebibliography">
+   <p class="bibitem" ><span class="biblabel">
+<a 
+ id="XPhilippJanerta"></a>[1] <span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>Philipp Janert, <span 
+class="cmti-12">Data Analysis with Open Source Tools, Chapter 2, pages 11-39</span>.
+   </p>
+                                                                                            
+                                                                                            
+   <p class="bibitem" ><span class="biblabel">
+<a 
+ id="XWikipedia1"></a>[2] <span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span><a href="https://en.wikipedia.org/wiki/Violin_plot">https://en.wikipedia.org/wiki/Violin_plot</a> 
+   </p>
+   <p class="bibitem" ><span class="biblabel">
+<a 
+ id="XPhilippJanert"></a>[3] <span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>Philipp Janert, <span 
+class="cmti-12">Data Analysis with Open Source Tools, Chapter 3, pages 47-70</span>.
+   </p>
+   <p class="bibitem" ><span class="biblabel">
+<a 
+ id="XWikipedia"></a>[4] <span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span><a href=" https://en.wikipedia.org/wiki/Phonon">https://en.wikipedia.org/wiki/Phonon</a> 
+</p>
+   </div>
+<!--l. 207--><p class="noindent" >
+                                                                                            
+                                                                                            
+ 
+</body></html> 
+
+                                                                                            
+
+

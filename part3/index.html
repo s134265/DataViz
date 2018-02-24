@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 
-  <head>
+<head>
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
@@ -9,9 +9,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
   <title>
-    
-      DataViz: "Home" &middot; dataviz.io
-    
+
+    DataViz: "Home" &middot; dataviz.io
+
   </title>
 
   <!-- CSS -->
@@ -23,94 +23,111 @@
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
   <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <script type="text/javascript" src="../d3.js"></script>
 </head>
 
 
-  <body>
+<body>
 
-    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+  <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
      styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+  <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
-<!-- Toggleable sidebar -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-item">
-    <p></p>
-  </div>
+  <!-- Toggleable sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-item">
+      <p></p>
+    </div>
 
-  <nav class="sidebar-nav">
-    
-      <a
-        class="sidebar-nav-item "
-        href="/">
+    <nav class="sidebar-nav">
+
+      <a class="sidebar-nav-item " href="/">
         Home
       </a>
-    
-      <a
-        class="sidebar-nav-item "
-        href="/part1/">
+
+      <a class="sidebar-nav-item " href="/part1/">
         Part 1: DAOST Chapter 2 Questions
       </a>
-    
-      <a
-        class="sidebar-nav-item "
-        href="/part2/">
+
+      <a class="sidebar-nav-item " href="/part2/">
         Part 2: DAOST Chapter 3 Questions
       </a>
-    
-      <a
-        class="sidebar-nav-item "
-        href="/part3/">
+
+      <a class="sidebar-nav-item " href="/part3/">
         Part 3: Viz 1
       </a>
 
-      <a
-      class="sidebar-nav-item "
-      href="/part4/">
-      Part 4: Viz 2
-    </a>
-  </nav>
+      <a class="sidebar-nav-item " href="/part4/">
+        Part 4: Viz 2
+      </a>
+    </nav>
 
-  <div class="sidebar-item">
-    <p>
-      &copy; 2018. All rights reserved.
-    </p>
+    <div class="sidebar-item">
+      <p>
+        &copy; 2018. All rights reserved.
+      </p>
+    </div>
   </div>
-</div>
 
 
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+  <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <label for="sidebar-checkbox" class="sidebar-toggle"></label>
 
-          <h3 class="masthead-title">
-            <a href="/" title="Home">dataviz.io</a>
-            <small>02806 Social Data Analysis and Visualization</small>
-          </h3>
-        </div>
-      </div>
-
-      <div class="container content">
-        <div class="post">
-  <p>
-    <h3 class="post-title">
-        Welcome to data visualization group X
-    </h3>
-  </p>
-  <p> Navigate between assignments in the sidebar! </p>
-
-</div>
-
-<div class="related">
-  More text go here!</a>
-</div>
-
+        <h3 class="masthead-title">
+          <a href="/" title="Home">dataviz.io</a>
+          <small>02806 Social Data Analysis and Visualization</small>
+        </h3>
       </div>
     </div>
 
-  </body>
-</html>
+    <div class="container content">
+      <div class="post">
+        <p>
+          <h3 class="post-title">
+            Part 3: Visualization of farmers market data.
+          </h3>
+        </p>
+        <p> This is a reproduction of
+          <a href=http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the>I Quant NY's blog post</a>.</p>
+        <p>
+          <h2 class = "center">
+            This is Quantifiably the Best Month to go to the Farmers Market
+          </h2>
+        </p>
+        <p>
+          As part of a homework assignment, I ask my students at Pratt to go out and chart something of interest to them, and Katherine
+          Savarese came back with a simple chart about farmers markets that I loved- it inspired this post. You probably
+          know that farmers markets are a staple across all five boroughs of New York City, but September happens to be a
+          very special month. Why is that? Well, it turns out September is the month with the most unique types of fresh
+          produce- forty three to be exact. To show the current offerings, we charted how many types of fruits and vegetables
+          are available by month, and showed if they were fresh or from storage.
+        </p>
+        <p class="clickable" , id="freshFruits">Show fresh fruits</p>
+        <p class="clickable" , id="storedFruits">Show stored fruits</p>
+        <p class="clickable" , id="storedVegetables">Show stored vegetables</p>
+        <p class="clickable" , id="freshVegetables">Show fresh vegetables</p>
+        <p class="clickable" , id="showAll"> Show all </p>
+        <h4>NYC Green Markets - Unique Product Types</h4>
+        <div id="graph1"></div>
+        <script src="farmer.js"></script>
+      </div>
+      <p>
+        If you miss the month of September, you might be behind the fruit curve, but there are plenty more months of vegetables left.
+        The chart shows that fresh vegetables are available 9 out of 12 months, but fruit is only available 5 out of 12.
+        Now if only we could quantify how delicious the produce is…
+      </p>
+      <div class="related">
+        Data from: <a href =http://www.grownyc.org/greenmarket/whatsavailable>http://www.grownyc.org/greenmarket/whatsavailable</a>
+      </div>
 
+    </div>
+  </div>
+
+</body>
+
+</html>
