@@ -4,6 +4,8 @@ var h = 570;
 var padding = 40;
 var margin = { x: 80, y: 50 };
 
+var inTransition = false;
+
 var transitionOrder = {
   first: 0,
   second: 1500,
@@ -234,7 +236,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     points.transition()
       .delay((d, i) => 10 * i)
       .ease(d3.easeCircleOut)
-      .attr('opacity', 1);
+      .attr('opacity', 1)
+      .on('start', () => {
+        inTransition = true;
+      });
   };
 
   var hidePoints = function (points) {
@@ -242,7 +247,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .duration(transitionOrder.third)
       .delay((d, i) => 10 * i)
       .ease(d3.easeCircleIn)
-      .attr('opacity', 0);
+      .attr('opacity', 0)
+      .on('end', () => {
+        inTransition = false;
+      });
   };
 
   // REGRESSION //
@@ -298,7 +306,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .duration(1500)
       .delay(transitionOrder.third)
       .attr('x2', endPoint.x)
-      .attr('y2', endPoint.y);
+      .attr('y2', endPoint.y)
+      .on('end', () => {
+        inTransition = false;
+      });
   };
 
   var hideRegressionLine = function (rl, startPoint, endPoint) {
@@ -308,7 +319,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .attr('x1', endPoint.x)
       .attr('y1', endPoint.y)
       .attr('x2', endPoint.x)
-      .attr('y2', endPoint.y);
+      .attr('y2', endPoint.y)
+      .on('start', () => {
+        inTransition = true;
+      });
   };
 
   // Labeling
@@ -330,13 +344,13 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   var showGroupLabel = function (gl) {
     gl.transition()
-      .duration(1000)
+      .duration(1500)
       .attr('opacity', 1);
   };
 
   var hideGroupLabel = function (gl) {
     gl.transition()
-      .duration(1000)
+      .duration(1500)
       .delay(transitionOrder.third)
       .attr('opacity', 0);
   }
@@ -380,6 +394,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   d3.select('body').select('#legend-male')
     .on('click', (d, i, nodes) => {
+      if (inTransition) {
+        return;
+      }
+
       maleHidden = !maleHidden;
       // Show grey font if runners are hidden, black if not
       d3.select(nodes[i]).style('color', maleHidden ? 'gray' : 'black')
@@ -393,6 +411,10 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   d3.select('body').select('#legend-female')
     .on('click', (d, i, nodes) => {
+      if (inTransition) {
+        return;
+      }
+
       femaleHidden = !femaleHidden;
       // Show grey font if runners are hidden, black if not
       d3.select(nodes[i]).style('color', femaleHidden ? 'gray' : 'black');
