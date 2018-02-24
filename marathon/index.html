@@ -13,59 +13,62 @@
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="marathon-viz">
-        <div class="three columns" id="marathon-legend"></div>
+        <div id="legend" class="hidden">
+          <table>
+            <col width="10">
+            <col width="100">
+
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="symbol">
+                    <svg width="10px" height="10px">
+                      <rect class="male plot-point" width="6px" height="6px" x="3px" y="3px"></rect>
+                    </svg>
+                  </div>
+                </td>
+                <td id="legend-male">
+                  Male runner
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="symbol">
+                    <svg width="10px" height="10px">
+                      <circle class="female plot-point" cx="6px" cy="6px" r="3px"></circle>
+                    </svg>
+                  </div>
+                </td>
+                <td id="legend-female">
+                  Female runner
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <section class="header">
+          <p class="title">
+            <strong>Marathon finishing times</strong>
+          </p>
+        </section>
       </div>
     </div>
 
     <div class="row">
-      <div class="twelve columns" id="plot-description">
-        <p>
-          <strong>Figure 1:</strong> Boston marathon data plotted for male and female runners.
+      <div id="plot-description">
+        <p class="figure-text">
+          <strong>Figure 1:</strong> Boston marathon data plotted for male and female runners. Hover mouse over a datapoint to show
+          detailed information. Click elements in legend to show/hide each group of data points.
         </p>
       </div>
     </div>
 
     <div class="row">
-      <div id="legend">
-        <table>
-          <col width="100">
-          <col width="100">
-
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>
-                <div class="symbol">
-                  <svg width="10px" height="10px">
-                    <rect class="male plot-point" width="5px" height="5px" x="2.5px" y="2.5px"></rect>
-                  </svg>
-                </div>
-              </td>
-              <td id="legend-male">
-                Male runner
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="symbol">
-                  <svg width="10px" height="10px">
-                    <circle class="female plot-point" cx="5px" cy="5px" r="2.5px"></circle>
-                  </svg>
-                </div>
-              </td>
-              <td id="legend-female">
-                Female runner
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 
