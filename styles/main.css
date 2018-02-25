@@ -1,0 +1,155 @@
+@import url('./skeleton/css/skeleton.css');
+@import url('./skeleton/css/normalize.css');
+
+/* for debugging */
+/* #marathon-viz {
+  border: 1px black solid;
+  min-width: 960px;
+} */
+
+/* #marathon-legend {
+  border: 1px blue solid;
+} */
+
+.title {
+  margin: 0;
+  text-align: center;
+}
+
+.header {
+  margin-top: 20px;
+}
+
+#marathon-svg {
+  position: sticky;
+  display: block;
+  margin: auto;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  shape-rendering: crispEdges;
+}
+
+.plot-point {
+  fill-opacity: 0;
+  transition: all 250ms linear;
+}
+
+.plot-point:hover {
+  fill-opacity: 1;
+  transition: all 250ms linear;
+}
+
+.male.plot-point {
+  fill: red;
+  stroke: red;
+  stroke-width: 1px;
+  width: 5px; 
+  height: 5px;
+}
+
+.female.plot-point {
+  fill: blue;
+  stroke: blue;
+  stroke-width: 1px;
+  r: 2.5px;
+}
+
+line.male, 
+line.female {
+  fill: none;
+}
+
+path {
+  fill: none;
+}
+
+path.male {
+  stroke-opacity: 0.3;
+  stroke: red;
+}
+
+path.female {
+  stroke-opacity: 0.3;
+  stroke: blue;
+}
+
+.regression {
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 4, 1;
+}
+
+.male.regression {
+  stroke: red;
+}
+
+.female.regression {
+  stroke: blue;
+}
+
+#plot-description {
+  margin: 0 auto;
+  text-align: center;
+  display: inline-block;
+  width: 600px;
+}
+
+.row {
+  text-align: center;
+}
+
+.axis-label {
+  fill: black;
+  text-anchor: middle;
+  font-size: 11px;
+}
+
+#legend .symbol {
+  margin-right: 15px;
+  float: right;
+}
+
+#legend {
+  user-select: none;
+  display: inline;
+  z-index: 3;
+  position: absolute;
+}
+
+#tooltip {
+  position: absolute;
+  width: 175px;
+  height: auto;
+  padding: 10px;
+  border: 1px solid grey;
+  background-color: white;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+.hidden {
+  pointer-events: none;
+}
+
+#tooltip p {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+.figure-text {
+  font-size: 12px;
+}
