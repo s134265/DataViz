@@ -46,12 +46,15 @@
   fill: red;
   stroke: red;
   stroke-width: 1px;
+  width: 5px; 
+  height: 5px;
 }
 
 .female.plot-point {
   fill: blue;
   stroke: blue;
   stroke-width: 1px;
+  r: 2.5px;
 }
 
 line.male, 
@@ -137,7 +140,7 @@ path.female {
 }
 
 .hidden {
-  display: none;
+  pointer-events: none;
 }
 
 #tooltip p {

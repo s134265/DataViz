@@ -4,7 +4,8 @@ var h = 570;
 var padding = 40;
 var margin = { x: 80, y: 50 };
 
-var inTransition = false;
+// transition locks
+var tl = { female: false, male: false };
 
 var transitionOrder = {
   first: 0,
@@ -19,7 +20,6 @@ var svg = d3.select('#marathon-viz')
   .attr('id', 'marathon-svg')
   .attr('width', w + margin.x)
   .attr('height', h + margin.y)
-  // .attr('height', h)
   .append('g')
   .attr('transform', `translate(${margin.x / 2}, 0)`);
 
@@ -136,7 +136,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     path.attr('stroke-dasharray', totalLength + ' ' + totalLength)
       .attr('stroke-dashoffset', totalLength)
       .transition()
-      .duration(1500)
+      .duration(1000)
       .delay(transitionOrder.second)
       .attr('stroke-dashoffset', 0);
   };
@@ -146,7 +146,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
     path.attr('stroke-dashoffset', 0)
       .transition()
-      .duration(1500)
+      .duration(1000)
       .delay(transitionOrder.second)
       .attr('stroke-dashoffset', -totalLength)
   }
@@ -175,10 +175,11 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
     // apply offset to center tooltip horizontically on plotpoint
     var ttXOffset = -parseInt(tooltip.style('width')) / 2;
+    var ttYOffset = 10;
 
     // Style tooltip
-    tooltip.style('left', xPosition + ttXOffset - 10 + 'px')
-      .style('top', 10 + yPosition + 'px')
+    tooltip.style('left', xPosition + ttXOffset + 'px')
+      .style('top', yPosition + ttYOffset + 'px')
       .select('#name')
       .text(d.athlete);
 
@@ -232,24 +233,24 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     .on('mouseover', mouseOverHandler)
     .on('mouseout', mouseOutHandler);
 
-  var showPoints = function (points) {
-    points.transition()
+  var showPoints = function (points, transitionLock) {
+    var t = points.transition()
       .delay((d, i) => 10 * i)
       .ease(d3.easeCircleOut)
       .attr('opacity', 1)
       .on('start', () => {
-        inTransition = true;
+        tl[transitionLock] = true;
       });
   };
 
-  var hidePoints = function (points) {
+  var hidePoints = function (points, transitionLock) {
     points.transition()
       .duration(transitionOrder.third)
       .delay((d, i) => 10 * i)
       .ease(d3.easeCircleIn)
       .attr('opacity', 0)
       .on('end', () => {
-        inTransition = false;
+        tl[transitionLock] = false;
       });
   };
 
@@ -297,31 +298,30 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     .attr('id', 'female-regression-line')
     .attr('class', 'female regression');
 
-  var showRegressionLine = function (rl, startPoint, endPoint) {
+  var showRegressionLine = function (rl, startPoint, endPoint, transitionLock) {
     rl.attr('x1', startPoint.x)
       .attr('y1', startPoint.y)
       .attr('x2', startPoint.x)
       .attr('y2', startPoint.y)
       .transition()
-      .duration(1500)
+      .duration(1000)
       .delay(transitionOrder.third)
       .attr('x2', endPoint.x)
       .attr('y2', endPoint.y)
       .on('end', () => {
-        inTransition = false;
+        tl[transitionLock] = false;
       });
   };
 
-  var hideRegressionLine = function (rl, startPoint, endPoint) {
+  var hideRegressionLine = function (rl, startPoint, endPoint, transitionLock) {
     rl.transition()
-      .duration(1500)
-      // .delay(transitionOrder.third)
+      .duration(1000)
       .attr('x1', endPoint.x)
       .attr('y1', endPoint.y)
       .attr('x2', endPoint.x)
       .attr('y2', endPoint.y)
       .on('start', () => {
-        inTransition = true;
+        tl[transitionLock] = true;
       });
   };
 
@@ -344,89 +344,134 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   var showGroupLabel = function (gl) {
     gl.transition()
-      .duration(1500)
+      .duration(1000)
       .attr('opacity', 1);
   };
 
   var hideGroupLabel = function (gl) {
     gl.transition()
-      .duration(1500)
+      .duration(1000)
       .delay(transitionOrder.third)
       .attr('opacity', 0);
   }
 
-  var maleHidden = false;
-  var femaleHidden = false;
-
   var showMaleGroup = function () {
-    showPoints(malePoints);
-    showRegressionLine(maleRegressionLine, regressionPoints.male.start, regressionPoints.male.end);
+    showPoints(malePoints, 'male');
+    showRegressionLine(
+      maleRegressionLine, regressionPoints.male.start,
+      regressionPoints.male.end, 'male');
     showPath(malePath);
     showGroupLabel(maleGroupLabel);
   };
 
   var hideMaleGroup = function () {
-    hidePoints(malePoints);
-    hideRegressionLine(maleRegressionLine, regressionPoints.male.start, regressionPoints.male.end);
+    hidePoints(malePoints, 'male');
+    hideRegressionLine(
+      maleRegressionLine, regressionPoints.male.start,
+      regressionPoints.male.end, 'male');
     hidePath(malePath);
     hideGroupLabel(maleGroupLabel);
   };
 
   var showFemaleGroup = function () {
-    showPoints(femalePoints);
-    showRegressionLine(femaleRegressionLine, regressionPoints.female.start, regressionPoints.female.end);
+    showPoints(femalePoints, 'female');
+    showRegressionLine(
+      femaleRegressionLine, regressionPoints.female.start,
+      regressionPoints.female.end, 'female');
     showPath(femalePath);
     showGroupLabel(femaleGroupLabel);
   };
 
   var hideFemaleGroup = function () {
-    hidePoints(femalePoints);
-    hideRegressionLine(femaleRegressionLine, regressionPoints.female.start, regressionPoints.female.end);
+    hidePoints(femalePoints, 'female');
+    hideRegressionLine(
+      femaleRegressionLine, regressionPoints.female.start,
+      regressionPoints.female.end, 'female');
     hidePath(femalePath);
     hideGroupLabel(femaleGroupLabel);
   };
 
-  // Position legend table
-  d3.select('body').select('#legend')
-    .style('right', 0)
-    .style('top', parseInt((h + margin.y) / 2) + 'px')
-    .classed('hidden', false);
+  // LEGENDS //
 
-  d3.select('body').select('#legend-male')
-    .on('click', (d, i, nodes) => {
-      if (inTransition) {
-        return;
-      }
+  var legendGroup = svg.append('g')
+    .attr('id', 'legend')
+    .attr('transform', `translate(${w / 4}, ${h / 4})`);
 
-      maleHidden = !maleHidden;
-      // Show grey font if runners are hidden, black if not
-      d3.select(nodes[i]).style('color', maleHidden ? 'gray' : 'black')
+  var maleLegend = legendGroup.append('g')
+    .attr('id', 'legend-male');
+  var femaleLegend = legendGroup.append('g')
+    .attr('id', 'legend-female')
+    .attr('transform', `translate(0, 20)`);
 
-      if (maleHidden) {
-        hideMaleGroup();
-      } else {
-        showMaleGroup();
-      }
-    });
+  // Align symbols with text in legend
+  var legendSymbolPos = {
+    male: { x: -15, y: -6.5 },
+    female: { x: -12.5, y: -4 },
+  };
 
-  d3.select('body').select('#legend-female')
-    .on('click', (d, i, nodes) => {
-      if (inTransition) {
-        return;
-      }
+  var maleLegendSymbol = maleLegend.append('rect')
+    .attr('class', 'male plot-point')
+    .attr('x', legendSymbolPos.male.x)
+    .attr('y', legendSymbolPos.male.y)
+    .attr('pointer-events', 'none');
 
-      femaleHidden = !femaleHidden;
-      // Show grey font if runners are hidden, black if not
-      d3.select(nodes[i]).style('color', femaleHidden ? 'gray' : 'black');
+  var femaleLegendSymbol = femaleLegend.append('circle')
+    .attr('class', 'female plot-point')
+    .attr('cx', legendSymbolPos.female.x)
+    .attr('cy', legendSymbolPos.female.y)
+    .attr('pointer-events', 'none');
 
-      if (femaleHidden) {
-        hideFemaleGroup();
-      } else {
-        showFemaleGroup();
-      }
-    });
+  var maleLegendText = maleLegend.append('text')
+    .text('Male runner')
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', '12px');
+
+  var femaleLegendText = femaleLegend.append('text')
+    .text('Female runner')
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', '12px');
+
+  var maleHidden = false;
+  var femaleHidden = false;
+
+  maleLegend.on('click', (d, i, nodes) => {
+    if (tl.male) {
+      return;
+    }
+
+    maleHidden = !maleHidden;
+    maleGroup.classed('hidden', maleHidden);
+    // Show grey font if runners are hidden, black if not
+    d3.select(nodes[i])
+      .select('text')
+      .attr('fill', maleHidden ? 'gray' : 'black');
+
+    if (maleHidden) {
+      hideMaleGroup();
+    } else {
+      showMaleGroup();
+    }
+  });
+
+  femaleLegend.on('click', (d, i, nodes) => {
+    if (tl.female) {
+      return;
+    }
+
+    femaleHidden = !femaleHidden;
+    femaleGroup.classed('hidden', femaleHidden);
+    // Show grey font if runners are hidden, black if not
+    d3.select(nodes[i])
+      .select('text')
+      .attr('fill', femaleHidden ? 'gray' : 'black');
+
+    if (femaleHidden) {
+      hideFemaleGroup();
+    } else {
+      showFemaleGroup();
+    }
+  });
 
   showMaleGroup();
   showFemaleGroup();
-
 });
