@@ -23,7 +23,7 @@ var rowConverter = function (d) {
     };
 }
 
-var names = ["Fresh fruit", "Storage Fruit", "Fresh vegetable", "Storage vegetable"];
+var names = ["Fresh fruit", "Storage Fruit", "Storage vegetable", "Fresh vegetable"];
 var colors = ["#98abc5", "#7b6888", "#a05d56", "#ff8c00"];
 
 
@@ -56,10 +56,10 @@ d3.csv("farmer.csv", rowConverter, function (data) {
         return (d.Index == 1)
     })
     vegetablesStorage = dataset.filter(function (d) {
-        return (d.Index == 2)
+        return (d.Index == 3)
     })
     vegetablesHarvest = dataset.filter(function (d) {
-        return (d.Index == 3)
+        return (d.Index == 2)
     })
     var barData = fruitsHarvest;
     //Create scale functions
