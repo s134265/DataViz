@@ -1,12 +1,12 @@
-// Adds the svg canvas
+// Adds the svgFarmer canvas
 var dataset;
 var w = 700;
 var h = 500;
 var barPadding = 1;
 var padding = 30;
 
-var svg = d3.select("#graph1")
-    .append("svg")
+var svgFarmer = d3.select("#graph1")
+    .append("svgFarmer")
     .attr("width", w)
     .attr("height", h)
     .append("g");
@@ -95,17 +95,17 @@ d3.csv("farmer.csv", rowConverter, function (data) {
         .scale(yScale)
         .ticks(10);
     //Create X axis
-    svg.append("g")
+    svgFarmer.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + (h - padding) + ")")
         .call(xAxis);
 
     //Create Y axis
-    svg.append("g")
+    svgFarmer.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(" + padding + ",0)")
         .call(yAxis);
-    svg.append("text")
+    svgFarmer.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", padding/4)
         .attr("x", -w/3)
@@ -115,7 +115,7 @@ d3.csv("farmer.csv", rowConverter, function (data) {
         .style("font-weight", "bold")
         .text("# of Unique Kinds of Produce")
         .attr("font-family", "sans-serif");
-    svg.selectAll("rect")
+    svgFarmer.selectAll("rect")
         .data(barData)
         .enter()
         .append("rect")
@@ -156,7 +156,7 @@ var showStacked = function (updateData) {
         .paddingInner(0.4);
 
 
-    var bars = svg.selectAll("rect")
+    var bars = svgFarmer.selectAll("rect")
         .remove()
         .exit()
         .data(updateData, function (d) { d.Month });
@@ -210,7 +210,7 @@ var showStacked = function (updateData) {
         .scale(yScale)
         .ticks(10);
     //Create Y axis
-    svg.selectAll("g .y.axis")
+    svgFarmer.selectAll("g .y.axis")
         .transition()
         .duration(500)
         .call(yAxis);
@@ -264,7 +264,7 @@ d3.selectAll("p")
             .paddingInner(0.4);
 
         console.log(bandwidthScale.bandwidth());
-        var bars = svg.selectAll("rect")
+        var bars = svgFarmer.selectAll("rect")
             .remove()
             .exit()
             .data(updateData, function (d) { d.Month });
@@ -295,14 +295,14 @@ d3.selectAll("p")
             .scale(yScale)
             .ticks(10);
         //Create Y axis
-        svg.selectAll("g .y.axis")
+        svgFarmer.selectAll("g .y.axis")
             .transition()
             .duration(500)
             .call(yAxis);
     })
 
 //Add legend
-svg.selectAll("text")
+svgFarmer.selectAll("text")
     .data(names)
     .enter()
     .append("text")
@@ -319,7 +319,7 @@ svg.selectAll("text")
     .attr("fill", "black");
 
 //Add squares to legend
-svg.selectAll("circle")
+svgFarmer.selectAll("circle")
     .data(colors)
     .enter()
     .append("circle")
