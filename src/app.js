@@ -1,13 +1,13 @@
 // SVG dimensions
-var w = 750;
-var h = 570;
-var padding = 40;
-var margin = { x: 80, y: 50 };
+var m_w = 750;
+var m_h = 570;
+var m_padding = 40;
+var m_margin = { x: 80, y: 50 };
 
 // transition locks
-var tl = { female: false, male: false };
+var m_tl = { female: false, male: false };
 
-var transitionOrder = {
+var m_transitionOrder = {
   first: 0,
   second: 1500,
   third: 3000,
@@ -15,27 +15,27 @@ var transitionOrder = {
 };
 
 // Define SVG
-var svg = d3.select('#marathon-viz')
+var m_svgMarathon = d3.select('#marathon-viz')
   .append('svg')
   .attr('id', 'marathon-svg')
-  .attr('width', w + margin.x)
-  .attr('height', h + margin.y)
+  .attr('width', m_w + m_margin.x)
+  .attr('height', m_h + m_margin.y)
   .append('g')
-  .attr('transform', `translate(${margin.x / 2}, 0)`);
+  .attr('transform', `translate(${m_margin.x / 2}, 0)`);
 
 // Read data
-var parseYear = d3.timeParse('%Y');
-var formatTime = d3.timeFormat('%Y');
+var m_parseYear = d3.timeParse('%Y');
+var m_formatTime = d3.timeFormat('%Y');
 
 // Calculate finishing time in minutes from string representation
-var parseFinishingTime = function (str) {
+var m_parseFinishingTime = function (str) {
   var timestamp = d3.timeParse('%H.%M.%S')(str);
   var timestampMinutes = timestamp.getHours() * 60 + timestamp.getMinutes() + 1 / 60 * timestamp.getSeconds();
   return timestampMinutes;
 };
 
 // Render finishing time as string
-var formatFinishingTime = function (time) {
+var m_formatFinishingTime = function (time) {
   var h = Math.floor(time / 60);
   time %= 60;
   var m = Math.floor(time);
@@ -45,17 +45,17 @@ var formatFinishingTime = function (time) {
   return `${h}h ${m}m ${s}s`;
 };
 
-var rowConverter = function (r) {
+var m_rowConverter = function (r) {
   return {
-    year: parseYear(r.Year),
+    year: m_parseYear(r.Year),
     athlete: r.Athlete,
     country: r.Country,
-    time: parseFinishingTime(r.Time),
+    time: m_parseFinishingTime(r.Time),
     sex: r.Sex,
   };
 };
 
-d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
+d3.csv('./data/olympic_merged.csv', m_rowConverter, (dataset) => {
   // Split dataset by gender
   maleRunners = dataset.filter(runner => runner.sex === 'm');
   femaleRunners = dataset.filter(runner => runner.sex === 'f');
@@ -69,50 +69,50 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       d3.timeYear.offset(startDate, -10),
       d3.timeYear.offset(endDate, 10),
     ])
-    .range([padding, w - padding]);
+    .range([m_padding, m_w - m_padding]);
 
   var yScale = d3.scaleLinear()
     .domain([
       d3.min(dataset, d => d.time) - 10,
       d3.max(dataset, d => d.time) + 10,
     ])
-    .range([h - padding, padding]);
+    .range([m_h - m_padding, m_padding]);
 
   // Axes
   var xAxis = d3.axisBottom()
     .scale(xScale)
     .ticks(d3.timeYear.every(20));
 
-  var xAxisGroup = svg.append('g')
+  var xAxisGroup = m_svgMarathon.append('g')
     .attr('class', 'axis')
-    .attr('transform', `translate(0, ${h - padding})`)
+    .attr('transform', `translate(0, ${m_h - m_padding})`)
     .call(xAxis);
 
-  svg.append('text')
+  m_svgMarathon.append('text')
     .attr('class', 'axis-label')
-    .attr('x', w / 2)
-    .attr('y', h + 5)
+    .attr('x', m_w / 2)
+    .attr('y', m_h + 5)
     .text('Year');
 
   var yAxis = d3.axisLeft()
     .scale(yScale);
 
-  var yAxisGroup = svg.append('g')
+  var yAxisGroup = m_svgMarathon.append('g')
     .attr('class', 'axis')
-    .attr('transform', `translate(${padding}, 0)`)
+    .attr('transform', `translate(${m_padding}, 0)`)
     .call(yAxis);
 
-  svg.append('text')
+  m_svgMarathon.append('text')
     .attr('class', 'axis-label')
     .attr('transform', 'rotate(-90)')
     // swap directions because element was rotated
     .attr('y', -10)
-    .attr('x', -h / 2)
+    .attr('x', -m_h / 2)
     .text('Time in minutes');
 
-  var maleGroup = svg.append('g')
+  var maleGroup = m_svgMarathon.append('g')
     .attr('id', 'male-runners');
-  var femaleGroup = svg.append('g')
+  var femaleGroup = m_svgMarathon.append('g')
     .attr('id', 'female-runners');
 
   // Define line generator
@@ -137,7 +137,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .attr('stroke-dashoffset', totalLength)
       .transition()
       .duration(1000)
-      .delay(transitionOrder.second)
+      .delay(m_transitionOrder.second)
       .attr('stroke-dashoffset', 0);
   };
 
@@ -147,7 +147,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     path.attr('stroke-dashoffset', 0)
       .transition()
       .duration(1000)
-      .delay(transitionOrder.second)
+      .delay(m_transitionOrder.second)
       .attr('stroke-dashoffset', -totalLength)
   }
 
@@ -186,7 +186,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .text(d.country);
 
     tooltip.select('#time')
-      .text(formatFinishingTime(d.time));
+      .text(m_formatFinishingTime(d.time));
 
     tooltip.select('#sex')
       .text(d.sex === 'm' ? 'male' : 'female');
@@ -235,18 +235,18 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .ease(d3.easeCircleOut)
       .attr('opacity', 1)
       .on('start', () => {
-        tl[transitionLock] = true;
+        m_tl[transitionLock] = true;
       });
   };
 
   var hidePoints = function (points, transitionLock) {
     points.transition()
-      .duration(transitionOrder.third)
+      .duration(m_transitionOrder.third)
       .delay((d, i) => 10 * i)
       .ease(d3.easeCircleIn)
       .attr('opacity', 0)
       .on('end', () => {
-        tl[transitionLock] = false;
+        m_tl[transitionLock] = false;
       });
   };
 
@@ -301,11 +301,11 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .attr('y2', startPoint.y)
       .transition()
       .duration(1000)
-      .delay(transitionOrder.third)
+      .delay(m_transitionOrder.third)
       .attr('x2', endPoint.x)
       .attr('y2', endPoint.y)
       .on('end', () => {
-        tl[transitionLock] = false;
+        m_tl[transitionLock] = false;
       });
   };
 
@@ -317,7 +317,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
       .attr('x2', endPoint.x)
       .attr('y2', endPoint.y)
       .on('start', () => {
-        tl[transitionLock] = true;
+        m_tl[transitionLock] = true;
       });
   };
 
@@ -327,7 +327,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     .attr('font-family', 'sans-serif')
     .attr('font-size', 11)
     .attr('x', 200)
-    .attr('y', h - 120)
+    .attr('y', m_h - 120)
     .attr('opacity', 0);
 
   var femaleGroupLabel = femaleGroup.append('text')
@@ -335,7 +335,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     .attr('font-family', 'sans-serif')
     .attr('font-size', 11)
     .attr('x', 500)
-    .attr('y', h - 400)
+    .attr('y', m_h - 400)
     .attr('opacity', 0);
 
   var showGroupLabel = function (gl) {
@@ -347,7 +347,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
   var hideGroupLabel = function (gl) {
     gl.transition()
       .duration(1000)
-      .delay(transitionOrder.third)
+      .delay(m_transitionOrder.third)
       .attr('opacity', 0);
   }
 
@@ -389,9 +389,9 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   // LEGENDS //
 
-  var legendGroup = svg.append('g')
+  var legendGroup = m_svgMarathon.append('g')
     .attr('id', 'legend')
-    .attr('transform', `translate(${w / 4}, ${h / 4})`);
+    .attr('transform', `translate(${m_w / 4}, ${m_h / 4})`);
 
   var maleLegend = legendGroup.append('g')
     .attr('id', 'legend-male');
@@ -431,7 +431,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
   var femaleHidden = false;
 
   maleLegend.on('click', (d, i, nodes) => {
-    if (tl.male) {
+    if (m_tl.male) {
       return;
     }
 
@@ -450,7 +450,7 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
   });
 
   femaleLegend.on('click', (d, i, nodes) => {
-    if (tl.female) {
+    if (m_tl.female) {
       return;
     }
 
