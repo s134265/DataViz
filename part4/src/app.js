@@ -166,21 +166,17 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
 
   var mouseOverHandler = function handleMouseOverOnPlotPoint(d, i, nodes) {
     // Get absolute (DOM) positions of elements in SVG element
-    var boundingRect = nodes[i].getBoundingClientRect();
-
-    var xPosition = boundingRect.left;
-    var yPosition = boundingRect.top;
-
     var tooltip = d3.select('#tooltip');
 
     // apply offset to center tooltip horizontically on plotpoint
     var ttXOffset = -parseInt(tooltip.style('width')) / 2;
     var ttYOffset = 10;
 
-    // Style tooltip
-    tooltip.style('left', xPosition + ttXOffset + 'px')
-      .style('top', yPosition + ttYOffset + 'px')
-      .select('#name')
+    // Position tooltip where event triggered and offset
+    tooltip.style('left', d3.event.pageX + ttXOffset + 'px')
+      .style('top', d3.event.pageY + ttYOffset + 'px');
+
+    tooltip.select('#name')
       .text(d.athlete);
 
     tooltip.select('#year')
@@ -263,12 +259,12 @@ d3.csv('./data/olympic_merged.csv', rowConverter, (dataset) => {
     };
   };
 
-  var regressMale = regression(-0.32156093953638193, 770.5288655566775);
-  var regressFemale = regression(-1.9131856378915035, 3954.058174178729);
+  var regressMale = regression(-0.32300099940998694, 773.3104210767137);
+  var regressFemale = regression(-2.859756410256487, 5823.756179487331);
 
   // Declare domains for regression lines
-  var m = maleRunners.filter(runner => runner.year.getFullYear() < 2000);
-  var f = femaleRunners.filter(runner => runner.year.getFullYear() < 2000);
+  var m = maleRunners.filter(runner => runner.year.getFullYear() < 1991);
+  var f = femaleRunners.filter(runner => runner.year.getFullYear() < 1991);
 
   var oldestMale = d3.min(m, d => d.year);
   var newestMale = d3.max(m, d => d.year);

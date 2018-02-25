@@ -29,21 +29,21 @@ def linear_fit(dataset):
 data_men = read_marathon_data('./data/olympic_men.csv')
 data_women = read_marathon_data('./data/olympic_women.csv')
 
-men_before_2000 = data_men[data_men[:, 0] < 2000]
-women_before_2000 = data_women[data_women[:, 0] < 2000]
+men_before_1991 = data_men[data_men[:, 0] <= 1990]
+women_before_1991 = data_women[data_women[:, 0] <= 1990]
 
-fit_male = linear_fit(men_before_2000)
-fit_female = linear_fit(women_before_2000)
+fit_male = linear_fit(men_before_1991)
+fit_female = linear_fit(women_before_1991)
 
 print(fit_male)
 print(linear_fit(data_men))
 
-print(fit_male[0] * men_before_2000[0, 0] + fit_male[1])
-print(fit_male[0] * men_before_2000[len(men_before_2000[:, 0]) - 1, 0] + fit_male[1])
+print(fit_male[0] * men_before_1991[0, 0] + fit_male[1])
+print(fit_male[0] *
+      men_before_1991[len(men_before_1991[:, 0]) - 1, 0] + fit_male[1])
 
 
-
-print(fit_female[0] * women_before_2000[0, 0] + fit_female[1])
+print(fit_female[0] * women_before_1991[0, 0] + fit_female[1])
 
 with open('./regression_results.txt', 'w') as f:
     f.write('male fit: coeff {f[0]}, intersect {f[1]}\n'
