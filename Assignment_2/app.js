@@ -52,10 +52,16 @@ var murderViz = function createVisualizationOfMurders() {
     // Parse hour from timestamp on the format hh:mm:ss
     const hourPattern = /^[^\:]*/;
 
+    let counter = 0;
     let rowConverter = function (d) {
+      // Gotta have this here to deal with missing values in CMPLNT_FR_TM
+      if (d['CMPLNT_FR_TM'] === '') {
+        d['CMPLNT_FR_TM'] = '0';
+      }
+
       // Ignore observations with missing or falsey values except 0
       for (const v of Object.values(d)) {
-        if (v !== 0 && !v) {
+        if (v !== '0' && !v) {
           return;
         }
       }
@@ -63,7 +69,7 @@ var murderViz = function createVisualizationOfMurders() {
       return {
         idx: parseInt(d.INDEX),
         date: d.RPT_DT,
-        time: parseInt(d.CMPLNT_FR_TM),
+        hour: parseInt(d.CMPLNT_FR_TM),
         borough: d.BORO_NM,
         lon: parseFloat(d.Longitude),
         lat: parseFloat(d.Latitude),
@@ -74,6 +80,9 @@ var murderViz = function createVisualizationOfMurders() {
       if (err) {
         throw err;
       }
+
+      console.log(counter);
+
 
       // Plot murder locations
       var datapoints = map.selectAll('circle')
@@ -88,14 +97,13 @@ var murderViz = function createVisualizationOfMurders() {
         .style('stroke-width', 0.25)
         .style('opacity', 0.75);
 
-      // BAR CHART //
       // Count no. of murders for each hour
       var murdersByHour = new Array(24).fill(0);
       for (const m of murders) {
         murdersByHour[m.hour]++;
       }
 
-      // Scales
+      // Scales and axes
       let barScales = {
         x: d3.scaleBand()
           .domain(d3.range(24))
@@ -103,9 +111,31 @@ var murderViz = function createVisualizationOfMurders() {
           .paddingInner(0.05),
         y: d3.scaleLinear()
           .domain([0, d3.max(murdersByHour)])
-          .range([h - padding, padding])
+          .range([h - padding, padding]),
       };
-      var lineScales = {
+      let barAxes = {
+        x: d3.axisBottom()
+          .scale(barScales.x)
+          .ticks(24)
+          .tickFormat(d => d),
+        y: d3.axisLeft()
+          .scale(barScales.y),
+      };
+
+      // Parse date object
+      const parseTime = d3.timeParse('%m/%d/%Y');
+
+      // Sum murders by day. Returns array on the form:
+      //   [{key: <date>, value: <count>}, {key: <date>, value: <count>}, ...]
+      let murdersByDay = d3.nest()
+        .key(d => d.date)
+        .rollup(v => v.length)
+        .entries(murders);
+
+      let startDate = d3.min(murdersByDay, m => parseTime(m.key));
+      let endDate = d3.max(murdersByDay, m => parseTime(m.key));
+
+      let lineScales = {
         x: d3.scaleTime()
           .domain([startDate, endDate])
           .range([padding, w - padding]),
@@ -116,31 +146,35 @@ var murderViz = function createVisualizationOfMurders() {
           ])
           .range([h - padding, padding]),
       };
-      var xScale = d3.scaleBand()
-        .domain(d3.range(24))
-        .rangeRound([padding, w - padding])
-        .paddingInner(0.05);
+      let lineAxes = {
+        x: d3.axisBottom()
+          .scale(lineScales.x)
+          .ticks(d3.timeYear.every(1)),
+        y: d3.axisLeft()
+          .scale(lineScales.y)
+          .ticks(5),
+      };
 
-      var yScale = d3.scaleLinear()
-        .domain([0, d3.max(murdersByHour)])
-        .range([h - padding, padding]);
-
-      var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks(24)
-        .tickFormat(d => d);
+      // Add axes to viz
       barChart.append('g')
-        .attr('class', 'x-axis group')
+        .attr('class', 'x-axis')
         .attr('transform', `translate(0, ${h - padding})`)
-        .call(xAxis);
-
-      var yAxis = d3.axisLeft()
-        .scale(yScale);
+        .call(barAxes.x);
       barChart.append('g')
-        .attr('class', 'y-axis group')
+        .attr('class', 'y-axis')
         .attr('transform', `translate(${padding}, 0)`)
-        .call(yAxis);
+        .call(barAxes.y);
 
+      lineChart.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', `translate(0, ${h - padding})`)
+        .call(lineAxes.x);
+      lineChart.append('g')
+        .attr('class', 'y-axis')
+        .attr('transform', `translate(${padding}, 0)`)
+        .call(lineAxes.y);
+
+      // BAR CHART //
       // Define quantize scale to sort data values into buckets of color
       let barColors = ['#d3d5d4', '#a2c5ac', '#9db5b2', '#878e99', '#7f6a93'];
       let barColorScale = d3.scaleQuantize()
@@ -153,10 +187,10 @@ var murderViz = function createVisualizationOfMurders() {
         .data(murdersByHour)
         .enter()
         .append('rect')
-        .attr('x', (d, i) => xScale(i))
-        .attr('y', d => yScale(d))
-        .attr('width', xScale.bandwidth())
-        .attr('height', d => h - yScale(d) - padding)
+        .attr('x', (d, i) => barScales.x(i))
+        .attr('y', d => barScales.y(d))
+        .attr('width', barScales.x.bandwidth())
+        .attr('height', d => h - barScales.y(d) - padding)
         .attr('fill', d => barColorScale(d));
 
       var labels = barChart.selectAll('.bar-label')
@@ -168,85 +202,38 @@ var murderViz = function createVisualizationOfMurders() {
         .attr('font-family', 'sans-serif')
         .attr('font-size', '11px')
         .attr('x', (d, i) => {
-          return xScale(i) + xScale.bandwidth() / 2;
+          return barScales.x(i) + barScales.x.bandwidth() / 2;
         })
         .attr('y', (d) => {
           // threshold for moving label above bar
-          let threshold = yScale.domain()[1] / 5;
-          let position = yScale(d);
+          let threshold = barScales.y.domain()[1] / 5;
+          let position = barScales.y(d);
 
           let offset = (d < threshold) ? -4 : 14;
 
           return position + offset;
         })
         .attr('fill', (d) => {
-          let threshold = yScale.domain()[1] / 5;
+          let threshold = barScales.y.domain()[1] / 5;
           return (d < threshold) ? 'black' : 'white';
         });
 
-
-      // LINE PLOT //
-      // Rollup murders by day. Returns array on the form:
-      //   [{key: <date>, value: <count>}, {key: <date>, value: <count>}, ...]
-      let murdersByDay = d3.nest()
-        .key(d => d.date)
-        .rollup(v => v.length)
-        .entries(murders);
-
-      // Parse date object
-      const parseTime = d3.timeParse('%m/%d/%Y');
-
-      let startDate = d3.min(murdersByDay, m => parseTime(m.key));
-      let endDate = d3.max(murdersByDay, m => parseTime(m.key));
-
-      let xScale = d3.scaleTime()
-        .domain([startDate, endDate])
-        .range([padding, w - padding]);
-      let yScale = d3.scaleLinear()
-        .domain([
-          d3.min(murdersByDay, d => d.value),
-          d3.max(murdersByDay, d => d.value),
-        ])
-        .range([h - padding, padding]);
-
-      let xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks(d3.timeYear.every(1));
-      let xAxisGroup = lineChart.append('g')
-        .attr('class', 'x-axis')
-        .attr('transform', `translate(0, ${h - padding})`)
-        .call(xAxis);
-
-      let yAxis = d3.axisLeft()
-        .scale(yScale)
-        .ticks(5);
-      let yAxisGroup = lineChart.append('g')
-        .attr('class', 'y-axis')
-        .attr('transform', `translate(${padding}, 0)`)
-        .call(yAxis);
-
-      // Sort ascending
-      murdersByDay = murdersByDay.sort(function (x, y) {
-        return d3.ascending(parseTime(x.key), parseTime(y.key));
-      });
-
+      // LINE CHART //
       // Sort with respect to date
       let sortedByDate = murdersByDay.sort((x, y) => {
         return d3.ascending(parseTime(x.key), parseTime(y.key));
       });
 
       let line = d3.line()
-        .x(d => xScale(parseTime(d.key)))
-        .y(d => yScale(d.value));
+        .x(d => lineScales.x(parseTime(d.key)))
+        .y(d => lineScales.y(d.value));
 
       let path = lineChart.append('path')
         .datum(sortedByDate)
         .attr('class', 'line')
         .attr('d', line);
 
-
-      // BRUSH //
-
+      // LINE CHART BRUSH //
       let reset = function resetDatapoints(d, i, nodes) {
         // If selection is still active, e.g. selection was clicked by user, pass.
         if (d3.event.selection) {
@@ -258,6 +245,47 @@ var murderViz = function createVisualizationOfMurders() {
         // Revert circles to initial style
         datapoints.classed('brushed', false);
         datapoints.classed('non-brushed', false);
+
+        // Update y scale domain
+        barScales.y.domain([0, d3.max(murdersByHour)]);
+
+        barColorScale.domain([
+          d3.min(murdersByHour),
+          d3.max(murdersByHour),
+        ]);
+
+        // Apply new y axis with transition
+        barChart.selectAll('.y-axis')
+          .call(barAxes.y);
+
+        // Update bars
+        bars.data(murdersByHour)
+          .attr('x', (d, i) => barScales.x(i))
+          .attr('y', d => barScales.y(d))
+          .attr('height', d => h - barScales.y(d) - padding)
+          .attr('fill', d => barColorScale(d));
+
+        // Update labels
+        labels.data(murdersByHour)
+          .text(d => d)
+          .attr('text-anchor', 'middle')
+          .attr('x', (d, i) => {
+            return barScales.x(i) + barScales.x.bandwidth() / 2;
+          })
+          .attr('y', (d) => {
+            // threshold for moving label above bar
+            let threshold = barScales.y.domain()[1] / 5;
+            let position = barScales.y(d);
+
+            let offset = (d < threshold) ? -4 : 14;
+
+            return position + offset;
+          })
+          .attr('fill', (d) => {
+            let threshold = barScales.y.domain()[1] / 5;
+            return (d < threshold) ? 'black' : 'white';
+          });
+
       };
 
       let isBrushed = function (brushCoords, x) {
@@ -268,6 +296,7 @@ var murderViz = function createVisualizationOfMurders() {
       };
 
       let onBrush = function brushHandler() {
+        // If selection is not active, return.
         if (!d3.event.selection) {
           return;
         }
@@ -285,7 +314,7 @@ var murderViz = function createVisualizationOfMurders() {
         let nonBrushed = [];
         for (const n of datapoints.nodes()) {
           let date = d3.select(n).datum().date;
-          let x = xScale(parseTime(date));
+          let x = lineScales.x(parseTime(date));
 
           if (isBrushed(brushCoords, x)) {
             brushed.push(n);
@@ -294,8 +323,69 @@ var murderViz = function createVisualizationOfMurders() {
           }
         }
 
+        // Map viz update
         d3.selectAll(brushed).classed('brushed', true);
         d3.selectAll(nonBrushed).classed('non-brushed', true);
+
+        // Bar chart update
+        let selectedData = d3.selectAll(brushed).data();
+        let murdersByHourSelection;
+        if (selectedData.length !== 0) {
+          murdersByHourSelection = new Array(24).fill(0);
+          for (const m of selectedData) {
+            murdersByHourSelection[m.hour]++;
+          }
+        } else {
+          // If no data was selected => plot all murders
+          murdersByHourSelection = murdersByHour;
+        }
+
+        // Update y scale domain
+        barScales.y.domain([0, d3.max(murdersByHourSelection)]);
+
+        barColorScale.domain([
+          d3.min(murdersByHourSelection),
+          d3.max(murdersByHourSelection),
+        ]);
+
+        // Apply new y axis with transition
+        barChart.selectAll('.y-axis')
+          .transition()
+          .duration(500)
+          .call(barAxes.y);
+
+        // Update bars
+        bars.data(murdersByHourSelection)
+          .transition()
+          .duration(500)
+          .attr('x', (d, i) => barScales.x(i))
+          .attr('y', d => barScales.y(d))
+          .attr('height', d => h - barScales.y(d) - padding)
+          .attr('fill', d => barColorScale(d));
+
+
+        // Update labels
+        labels.data(murdersByHourSelection)
+          .transition()
+          .duration(500)
+          .text(d => d)
+          .attr('text-anchor', 'middle')
+          .attr('x', (d, i) => {
+            return barScales.x(i) + barScales.x.bandwidth() / 2;
+          })
+          .attr('y', (d) => {
+            // threshold for moving label above bar
+            let threshold = barScales.y.domain()[1] / 5;
+            let position = barScales.y(d);
+
+            let offset = (d < threshold) ? -4 : 14;
+
+            return position + offset;
+          })
+          .attr('fill', (d) => {
+            let threshold = barScales.y.domain()[1] / 5;
+            return (d < threshold) ? 'black' : 'white';
+          });
       };
 
       let brush = d3.brushX()
