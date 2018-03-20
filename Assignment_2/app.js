@@ -22,6 +22,10 @@ var murderViz = function createVisualizationOfMurders() {
     .append('svg')
     .attr('width', w)
     .attr('height', h);
+  var barChart = d3.select('body')
+    .append('svg')
+    .attr('width', w)
+    .attr('height', h);
 
   d3.json(boroughDataPath, (err, boroughs) => {
     if (err) {
@@ -49,7 +53,7 @@ var murderViz = function createVisualizationOfMurders() {
     const hourPattern = /^[^\:]*/;
 
     let rowConverter = function (d) {
-      // Ignore observations with missing or falsey values (0 is okay)
+      // Ignore observations with missing or falsey values except 0
       for (const v of Object.values(d)) {
         if (v !== 0 && !v) {
           return;
@@ -83,6 +87,102 @@ var murderViz = function createVisualizationOfMurders() {
         .style('stroke', 'gray')
         .style('stroke-width', 0.25)
         .style('opacity', 0.75);
+
+      // BAR CHART //
+      // Count no. of murders for each hour
+      var murdersByHour = new Array(24).fill(0);
+      for (const m of murders) {
+        murdersByHour[m.hour]++;
+      }
+
+      // Scales
+      let barScales = {
+        x: d3.scaleBand()
+          .domain(d3.range(24))
+          .rangeRound([padding, w - padding])
+          .paddingInner(0.05),
+        y: d3.scaleLinear()
+          .domain([0, d3.max(murdersByHour)])
+          .range([h - padding, padding])
+      };
+      var lineScales = {
+        x: d3.scaleTime()
+          .domain([startDate, endDate])
+          .range([padding, w - padding]),
+        y: d3.scaleLinear()
+          .domain([
+            d3.min(murdersByDay, d => d.value),
+            d3.max(murdersByDay, d => d.value),
+          ])
+          .range([h - padding, padding]),
+      };
+      var xScale = d3.scaleBand()
+        .domain(d3.range(24))
+        .rangeRound([padding, w - padding])
+        .paddingInner(0.05);
+
+      var yScale = d3.scaleLinear()
+        .domain([0, d3.max(murdersByHour)])
+        .range([h - padding, padding]);
+
+      var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .ticks(24)
+        .tickFormat(d => d);
+      barChart.append('g')
+        .attr('class', 'x-axis group')
+        .attr('transform', `translate(0, ${h - padding})`)
+        .call(xAxis);
+
+      var yAxis = d3.axisLeft()
+        .scale(yScale);
+      barChart.append('g')
+        .attr('class', 'y-axis group')
+        .attr('transform', `translate(${padding}, 0)`)
+        .call(yAxis);
+
+      // Define quantize scale to sort data values into buckets of color
+      let barColors = ['#d3d5d4', '#a2c5ac', '#9db5b2', '#878e99', '#7f6a93'];
+      let barColorScale = d3.scaleQuantize()
+        .range(barColors);
+
+      barColorScale.domain([d3.min(murdersByHour), d3.max(murdersByHour)]);
+
+      // Define bars and labels
+      var bars = barChart.selectAll('rect')
+        .data(murdersByHour)
+        .enter()
+        .append('rect')
+        .attr('x', (d, i) => xScale(i))
+        .attr('y', d => yScale(d))
+        .attr('width', xScale.bandwidth())
+        .attr('height', d => h - yScale(d) - padding)
+        .attr('fill', d => barColorScale(d));
+
+      var labels = barChart.selectAll('.bar-label')
+        .data(murdersByHour)
+        .enter()
+        .append('text')
+        .text(d => d)
+        .attr('text-anchor', 'middle')
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '11px')
+        .attr('x', (d, i) => {
+          return xScale(i) + xScale.bandwidth() / 2;
+        })
+        .attr('y', (d) => {
+          // threshold for moving label above bar
+          let threshold = yScale.domain()[1] / 5;
+          let position = yScale(d);
+
+          let offset = (d < threshold) ? -4 : 14;
+
+          return position + offset;
+        })
+        .attr('fill', (d) => {
+          let threshold = yScale.domain()[1] / 5;
+          return (d < threshold) ? 'black' : 'white';
+        });
 
 
       // LINE PLOT //
