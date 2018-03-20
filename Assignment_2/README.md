@@ -1,2 +1,2 @@
 # DataViz
-Start a http-server in this folder to read assignment 2
+Start a http-server in this folder to read assignment 2.
