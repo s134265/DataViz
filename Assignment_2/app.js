@@ -11,6 +11,7 @@ let murderViz = function createVisualizationOfMurders() {
   let formatDateRange = function (lo, hi, sep = ' to ') {
     return `${formatDateAsISO(lo)}${sep}${formatDateAsISO(hi)}`;
   };
+  let formatDateAsANSI = d3.timeFormat('%m/%d/%Y');
 
   // Set center of projection to NYC
   let nyc = [-74.0060, 40.7128];
@@ -142,15 +143,48 @@ let murderViz = function createVisualizationOfMurders() {
       // Parse date string in US notation to date object
       const parseTime = d3.timeParse('%m/%d/%Y');
 
-      // Sum murders by day. Returns array on the form:
+      // Following was added because we only have murder entries and should
+      // visualize days-- including days without murders. The following creates
+      // an array on the form 
       //   [{key: <date>, value: <count>}, {key: <date>, value: <count>}, ...]
-      let murdersByDay = d3.nest()
+      // where key is the date and value is the number of murders on that date.
+
+      // First: pair dates with no. of murders on that date.
+      // Returns {<date>: <count>, ...}, albeit with no 0 values.
+      let murdersByDayHash = d3.nest()
         .key(d => d.date)
         .rollup(v => v.length)
-        .entries(murders);
+        .object(murders);
 
-      let startDate = d3.min(murdersByDay, m => parseTime(m.key));
-      let endDate = d3.max(murdersByDay, m => parseTime(m.key));
+      // Set start date and end date for domain
+      let dates = Object.keys(murdersByDayHash);
+      let startDate = d3.min(dates, d => parseTime(d));
+      let endDate = d3.max(dates, d => parseTime(d));
+
+      // Create an array of all dates in the interval. Iterate over the interval
+      // and add any dates to murdersByDayHash where no murders occurred.
+      let timeDomain = d3.timeDay.range(startDate, endDate);
+      for (const d of timeDomain.map(formatDateAsANSI)) {
+        if (!murdersByDayHash[d]) {
+          murdersByDayHash[d] = 0;
+        }
+      }
+
+      console.log(startDate);
+      console.log(endDate);
+      console.log(timeDomain[0], timeDomain[timeDomain.length - 1]);
+      
+      
+      
+
+      // To ensure compatibility with the rest of code, which was originally 
+      // written to suit d3.nest().<...>.rollup().
+      let murdersByDay = Object.entries(murdersByDayHash).map((e) => {
+        return {
+          key: e[0],
+          value: e[1],
+        };
+      });
 
       let lineScales = {
         x: d3.scaleTime()
@@ -225,20 +259,13 @@ let murderViz = function createVisualizationOfMurders() {
         .attr('transform', `translate(${w / 4}, ${h / 4})`);
 
       let mapLegendBox = mapLegendGroup.append('rect')
-      .attr('x', '-20px')
-      .attr('y', '-20px')
+        .attr('x', '-20px')
+        .attr('y', '-20px')
         .attr('width', '180px')
         .attr('height', '30px')
         .attr('stroke', 'lightgray')
         .attr('stroke-width', '1px')
         .attr('fill', 'none');
-
-
-      // mapLegend.append('rect')
-      // .attr('width', '100%')
-      // .attr('height', '100%')
-      // .attr('stroke', 'black')
-      // .attr('stroke-width', '1px');
 
       let mapLegendSymbol = mapLegendGroup.append('circle')
         .attr('class', 'datapoint')
@@ -300,6 +327,9 @@ let murderViz = function createVisualizationOfMurders() {
       let sortedByDate = murdersByDay.sort((x, y) => {
         return d3.ascending(parseTime(x.key), parseTime(y.key));
       });
+
+      console.log(sortedByDate[0], sortedByDate[sortedByDate.length - 1]);
+      
 
       let line = d3.line()
         .x(d => lineScales.x(parseTime(d.key)))
