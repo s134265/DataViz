@@ -105,7 +105,7 @@ d3.csv('./data/olympic_merged.csv', m_rowConverter, (dataset) => {
   m_svgMarathon.append('text')
     .attr('class', 'axis-label')
     .attr('transform', 'rotate(-90)')
-    // swap directions because element was rotated
+    // swap directions (f: x, y -> y, x) because element was rotated
     .attr('y', -10)
     .attr('x', -m_h / 2)
     .text('Time in minutes');

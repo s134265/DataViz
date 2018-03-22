@@ -4,9 +4,13 @@ let murderViz = function createVisualizationOfMurders() {
 
   let w = 800;
   let h = 500;
-  let padding = 50;
+  let padding = 70;
 
-  let selectionDomainLabel = d3.select('#selection-domain');
+  // HELPERS //
+  let formatDateAsISO = d3.timeFormat('%Y/%m/%d');
+  let formatDateRange = function (lo, hi, sep = ' to ') {
+    return `${formatDateAsISO(lo)}${sep}${formatDateAsISO(hi)}`;
+  };
 
   // Set center of projection to NYC
   let nyc = [-74.0060, 40.7128];
@@ -15,29 +19,6 @@ let murderViz = function createVisualizationOfMurders() {
   let projection = d3.geoMercator()
     .center(nyc)
     .scale([50000]);
-
-  let boroughLabelPositions = {
-    'manhattan': {
-      x: '45%',
-      y: '35%',
-    },
-    'staten island': {
-      x: '45%',
-      y: '50%',
-    },
-    'brooklyn': {
-      x: '65%',
-      y: '92%',
-    },
-    'queens': {
-      x: '95%',
-      y: '50%',
-    },
-    'bronx': {
-      x: '95%',
-      y: '20%',
-    },
-  };
 
   let map = d3.select('body')
     .append('svg')
@@ -56,13 +37,11 @@ let murderViz = function createVisualizationOfMurders() {
     .append('svg')
     .attr('width', w)
     .attr('height', h);
+
   let barChart = d3.select('body')
     .append('svg')
     .attr('width', w)
     .attr('height', h);
-
-  let selectionDomainLabel = d3.select('#selection-domain')
-    .text('all');
 
   d3.json(boroughDataPath, (err, boroughs) => {
     if (err) {
@@ -131,11 +110,7 @@ let murderViz = function createVisualizationOfMurders() {
         .append('circle')
         .attr('class', 'datapoint')
         .attr('cx', d => projection([d.lon, d.lat])[0])
-        .attr('cy', d => projection([d.lon, d.lat])[1])
-        .attr('r', 3)
-        .style('stroke', 'black')
-        .style('stroke-width', 0.25)
-        .style('opacity', 0.75);
+        .attr('cy', d => projection([d.lon, d.lat])[1]);
 
       // Count no. of murders for each hour
       let murdersByHour = new Array(24).fill(0);
@@ -148,6 +123,7 @@ let murderViz = function createVisualizationOfMurders() {
       let barScales = {
         x: d3.scaleBand()
           .domain(d3.range(24))
+          .rangeRound([padding, w - padding])
           .rangeRound([padding, w - padding])
           .paddingInner(0.05),
         y: d3.scaleLinear()
@@ -163,7 +139,7 @@ let murderViz = function createVisualizationOfMurders() {
           .scale(barScales.y),
       };
 
-      // Parse date object
+      // Parse date string in US notation to date object
       const parseTime = d3.timeParse('%m/%d/%Y');
 
       // Sum murders by day. Returns array on the form:
@@ -192,9 +168,12 @@ let murderViz = function createVisualizationOfMurders() {
           .scale(lineScales.x)
           .ticks(d3.timeYear.every(1)),
         y: d3.axisLeft()
-          .scale(lineScales.y)
-          .ticks(5),
+          .scale(lineScales.y),
       };
+
+      // Show current brush selection in line chart as a date range
+      let selectionDomainLabel = d3.select('#selection-domain')
+        .text(formatDateRange(startDate, endDate));
 
       // Add axes to viz
       barChart.append('g')
@@ -214,6 +193,63 @@ let murderViz = function createVisualizationOfMurders() {
         .attr('class', 'y-axis')
         .attr('transform', `translate(${padding}, 0)`)
         .call(lineAxes.y);
+
+      // Axis labels
+      barChart.append('text')
+        .attr('class', 'axis-label')
+        .attr('x', w / 2)
+        .attr('y', h - 30)
+        .text('Hour of day');
+      barChart.append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 35)
+        .attr('x', -h / 2)
+        .text('No. of murders');
+
+      lineChart.append('text')
+        .attr('class', 'axis-label')
+        .attr('x', w / 2)
+        .attr('y', h - 30)
+        .text('Date');
+      lineChart.append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 35)
+        .attr('x', -h / 2)
+        .text('No. of murders');
+
+      // Legends
+      let mapLegendGroup = map.append('g')
+        .attr('id', 'legend')
+        .attr('transform', `translate(${w / 4}, ${h / 4})`);
+
+      let mapLegendBox = mapLegendGroup.append('rect')
+      .attr('x', '-20px')
+      .attr('y', '-20px')
+        .attr('width', '180px')
+        .attr('height', '30px')
+        .attr('stroke', 'lightgray')
+        .attr('stroke-width', '1px')
+        .attr('fill', 'none');
+
+
+      // mapLegend.append('rect')
+      // .attr('width', '100%')
+      // .attr('height', '100%')
+      // .attr('stroke', 'black')
+      // .attr('stroke-width', '1px');
+
+      let mapLegendSymbol = mapLegendGroup.append('circle')
+        .attr('class', 'datapoint')
+        .attr('cx', -10)
+        .attr('cy', -5)
+        .attr('pointer-events', 'none');
+
+      let mapLegendText = mapLegendGroup.append('text')
+        .text('Location of reported murder')
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '12px');
 
       // BAR CHART //
       // Define quantize scale to sort data values into buckets of color
@@ -247,7 +283,7 @@ let murderViz = function createVisualizationOfMurders() {
         })
         .attr('y', (d) => {
           // threshold for moving label above bar
-          let threshold = barScales.y.domain()[1] / 5;
+          let threshold = barScales.y.domain()[1] / 10;
           let position = barScales.y(d);
 
           let offset = (d < threshold) ? -4 : 14;
@@ -255,7 +291,7 @@ let murderViz = function createVisualizationOfMurders() {
           return position + offset;
         })
         .attr('fill', (d) => {
-          let threshold = barScales.y.domain()[1] / 5;
+          let threshold = barScales.y.domain()[1] / 10;
           return (d < threshold) ? 'black' : 'white';
         });
 
@@ -275,11 +311,15 @@ let murderViz = function createVisualizationOfMurders() {
         .attr('d', line);
 
       // LINE CHART BRUSH //
+
       let reset = function resetDatapoints(d, i, nodes) {
-        // If selection is still active, e.g. selection was clicked by user, pass.
+        // If selection is still active, e.g. if event was emitted merely 
+        // because the selection was clicked by the user, do nothing.
         if (d3.event.selection) {
           return;
         }
+
+        mapLegendSymbol.classed('brushed', false);
 
         // Revert circles to initial style
         datapoints.classed('brushed', false);
@@ -292,6 +332,10 @@ let murderViz = function createVisualizationOfMurders() {
           d3.min(murdersByHour),
           maxMurdersByHour,
         ]);
+
+        // Reset selection domain label
+        selectionDomainLabel.text(
+          formatDateRange(startDate, endDate));
 
         // Apply new y axis with transition
         barChart.selectAll('.y-axis')
@@ -313,7 +357,7 @@ let murderViz = function createVisualizationOfMurders() {
           })
           .attr('y', (d) => {
             // threshold for moving label above bar
-            let threshold = barScales.y.domain()[1] / 5;
+            let threshold = barScales.y.domain()[1] / 10;
             let position = barScales.y(d);
 
             let offset = (d < threshold) ? -4 : 14;
@@ -321,7 +365,7 @@ let murderViz = function createVisualizationOfMurders() {
             return position + offset;
           })
           .attr('fill', (d) => {
-            let threshold = barScales.y.domain()[1] / 5;
+            let threshold = barScales.y.domain()[1] / 10;
             return (d < threshold) ? 'black' : 'white';
           });
       };
@@ -356,6 +400,8 @@ let murderViz = function createVisualizationOfMurders() {
           return;
         }
 
+        mapLegendSymbol.classed('brushed', true);
+
         let brushCoords = d3.brushSelection(this);
 
         // Style brushed circles
@@ -371,6 +417,13 @@ let murderViz = function createVisualizationOfMurders() {
             nonBrushed.push(n);
           }
         }
+
+        // Update domain label to display current selection. 
+        // Convert brush coordinates (px values) to dates first by using 
+        // inverted time scale.
+        let dateRange = brushCoords.map(lineScales.x.invert);
+        selectionDomainLabel.text(
+          formatDateRange(dateRange[0], dateRange[1]));
 
         // Map viz update
         let selectBrushed = d3.selectAll(brushed);
@@ -441,7 +494,7 @@ let murderViz = function createVisualizationOfMurders() {
           })
           .attr('y', (d) => {
             // threshold for moving label above bar
-            let threshold = barScales.y.domain()[1] / 5;
+            let threshold = barScales.y.domain()[1] / 10;
             let position = barScales.y(d);
 
             let offset = (d < threshold) ? -4 : 14;
@@ -449,7 +502,7 @@ let murderViz = function createVisualizationOfMurders() {
             return position + offset;
           })
           .attr('fill', (d) => {
-            let threshold = barScales.y.domain()[1] / 5;
+            let threshold = barScales.y.domain()[1] / 10;
             return (d < threshold) ? 'black' : 'white';
           });
       };
@@ -467,7 +520,7 @@ let murderViz = function createVisualizationOfMurders() {
       d3.select('#animate-button')
         .on('click', () => {
           // Set coordinates of brush window
-          console.log('moving brush');
+          console.log(lineScales.x(new Date(2007, 1, 1)));
 
           const selectionWidth = 100;
           const bounds = {
