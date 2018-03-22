@@ -6,6 +6,8 @@ let murderViz = function createVisualizationOfMurders() {
   let h = 500;
   let padding = 50;
 
+  let selectionDomainLabel = d3.select('#selection-domain');
+
   // Set center of projection to NYC
   let nyc = [-74.0060, 40.7128];
 
@@ -59,6 +61,9 @@ let murderViz = function createVisualizationOfMurders() {
     .attr('width', w)
     .attr('height', h);
 
+  let selectionDomainLabel = d3.select('#selection-domain')
+    .text('all');
+
   d3.json(boroughDataPath, (err, boroughs) => {
     if (err) {
       throw err;
@@ -69,7 +74,6 @@ let murderViz = function createVisualizationOfMurders() {
       .projection(projection);
 
     // Assign colors to boroughs
-    // let boroughColors = ['#673c4f', '#7f557d', '#726e97', '#7693b3', '#83b5d1'];
     let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
     for (let i = 0; i < boroughs.features.length; i++) {
       boroughs.features[i].color = boroughColors[i];
@@ -86,30 +90,11 @@ let murderViz = function createVisualizationOfMurders() {
       let boroughName = f.properties.BoroName;
       let centroid = path.centroid(f);
 
-      // // For calculating the position of the label if offset from the map
-      // let labelPos = boroughLabelPositions[boroughName.toLowerCase()];
-      // if (!labelPos) {
-      //   throw `borough ${boroughName} not found`;
-      // }
-
       let boroughLabel = map.append('text')
         .attr('class', 'borough-label')
         .text(boroughName)
-        // .attr('x', labelPos.x)
-        // .attr('y', labelPos.y);
         .attr('x', centroid[0])
         .attr('y', centroid[1]);
-
-      // Run a line from label to centroid of 
-      // let labelLine = map.append('line')
-      //   .attr('stroke-dashoffset', '25')
-      //   .attr('stroke-dasharray', '20, 10')
-      //   .attr('stroke', 'black')
-      //   .attr('stroke-width', '1px')
-      //   .attr('x1', centroid[0])
-      //   .attr('y1', centroid[1])
-      //   .attr('x2', parseInt(labelPos.x) / 100 * w)
-      //   .attr('y2', parseInt(labelPos.y) / 100 * h);
     }
 
     // Parse hour from timestamp on the format hh:mm:ss
