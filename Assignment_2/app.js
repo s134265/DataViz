@@ -1,28 +1,60 @@
-var murderViz = function createVisualizationOfMurders() {
-  var murderDataPath = './data/all_murders.csv';
-  var boroughDataPath = './data/boroughs.geojson';
+let murderViz = function createVisualizationOfMurders() {
+  let murderDataPath = './data/all_murders.csv';
+  let boroughDataPath = './data/boroughs.geojson';
 
-  var w = 800;
-  var h = 500;
-  var padding = 50;
+  let w = 800;
+  let h = 500;
+  let padding = 50;
 
   // Set center of projection to NYC
-  var nyc = [-74.0060, 40.7128];
+  let nyc = [-74.0060, 40.7128];
 
   // Define projection
-  var projection = d3.geoMercator()
+  let projection = d3.geoMercator()
     .center(nyc)
     .scale([50000]);
 
-  var map = d3.select('body')
+  let boroughLabelPositions = {
+    'manhattan': {
+      x: '45%',
+      y: '35%',
+    },
+    'staten island': {
+      x: '45%',
+      y: '50%',
+    },
+    'brooklyn': {
+      x: '65%',
+      y: '92%',
+    },
+    'queens': {
+      x: '95%',
+      y: '50%',
+    },
+    'bronx': {
+      x: '95%',
+      y: '20%',
+    },
+  };
+
+  let map = d3.select('body')
+    .append('svg')
+    .attr('width', w)
+    .attr('height', h)
+    .on('click', () => {
+      // This is used for assigning positions to labels
+      let coords = d3.mouse(map.node());
+      console.log({
+        x: `${coords[0] / w * 100}%`,
+        y: `${coords[1] / h * 100}%`,
+      });
+    });
+
+  let lineChart = d3.select('body')
     .append('svg')
     .attr('width', w)
     .attr('height', h);
-  var lineChart = d3.select('body')
-    .append('svg')
-    .attr('width', w)
-    .attr('height', h);
-  var barChart = d3.select('body')
+  let barChart = d3.select('body')
     .append('svg')
     .attr('width', w)
     .attr('height', h);
@@ -33,35 +65,61 @@ var murderViz = function createVisualizationOfMurders() {
     }
 
     // Define path
-    var path = d3.geoPath()
+    let path = d3.geoPath()
       .projection(projection);
 
     // Assign colors to boroughs
-    let boroughColors = ['#673c4f', '#7f557d', '#726e97', '#7693b3', '#83b5d1'];
+    // let boroughColors = ['#673c4f', '#7f557d', '#726e97', '#7693b3', '#83b5d1'];
+    let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
     for (let i = 0; i < boroughs.features.length; i++) {
       boroughs.features[i].color = boroughColors[i];
     }
 
-    map.selectAll('path')
+    let boroughPaths = map.selectAll('path')
       .data(boroughs.features)
       .enter()
       .append('path')
       .attr('d', path)
       .style('fill', d => d.color);
 
+    for (const f of boroughs.features) {
+      let boroughName = f.properties.BoroName;
+      let centroid = path.centroid(f);
+
+      // // For calculating the position of the label if offset from the map
+      // let labelPos = boroughLabelPositions[boroughName.toLowerCase()];
+      // if (!labelPos) {
+      //   throw `borough ${boroughName} not found`;
+      // }
+
+      let boroughLabel = map.append('text')
+        .attr('class', 'borough-label')
+        .text(boroughName)
+        // .attr('x', labelPos.x)
+        // .attr('y', labelPos.y);
+        .attr('x', centroid[0])
+        .attr('y', centroid[1]);
+
+      // Run a line from label to centroid of 
+      // let labelLine = map.append('line')
+      //   .attr('stroke-dashoffset', '25')
+      //   .attr('stroke-dasharray', '20, 10')
+      //   .attr('stroke', 'black')
+      //   .attr('stroke-width', '1px')
+      //   .attr('x1', centroid[0])
+      //   .attr('y1', centroid[1])
+      //   .attr('x2', parseInt(labelPos.x) / 100 * w)
+      //   .attr('y2', parseInt(labelPos.y) / 100 * h);
+    }
+
     // Parse hour from timestamp on the format hh:mm:ss
     const hourPattern = /^[^\:]*/;
 
     let counter = 0;
     let rowConverter = function (d) {
-      // Gotta have this here to deal with missing values in CMPLNT_FR_TM
-      if (d['CMPLNT_FR_TM'] === '') {
-        d['CMPLNT_FR_TM'] = '0';
-      }
-
-      // Ignore observations with missing or falsey values except 0
+      // Ignore observations with missing or otherwise falsey values
       for (const v of Object.values(d)) {
-        if (v !== '0' && !v) {
+        if (!v) {
           return;
         }
       }
@@ -81,11 +139,8 @@ var murderViz = function createVisualizationOfMurders() {
         throw err;
       }
 
-      console.log(counter);
-
-
       // Plot murder locations
-      var datapoints = map.selectAll('circle')
+      let datapoints = map.selectAll('circle')
         .data(murders)
         .enter()
         .append('circle')
@@ -93,16 +148,17 @@ var murderViz = function createVisualizationOfMurders() {
         .attr('cx', d => projection([d.lon, d.lat])[0])
         .attr('cy', d => projection([d.lon, d.lat])[1])
         .attr('r', 3)
-        .style('stroke', 'gray')
+        .style('stroke', 'black')
         .style('stroke-width', 0.25)
         .style('opacity', 0.75);
 
       // Count no. of murders for each hour
-      var murdersByHour = new Array(24).fill(0);
+      let murdersByHour = new Array(24).fill(0);
       for (const m of murders) {
         murdersByHour[m.hour]++;
       }
 
+      let maxMurdersByHour = d3.max(murdersByHour);
       // Scales and axes
       let barScales = {
         x: d3.scaleBand()
@@ -110,7 +166,7 @@ var murderViz = function createVisualizationOfMurders() {
           .rangeRound([padding, w - padding])
           .paddingInner(0.05),
         y: d3.scaleLinear()
-          .domain([0, d3.max(murdersByHour)])
+          .domain([0, maxMurdersByHour])
           .range([h - padding, padding]),
       };
       let barAxes = {
@@ -180,10 +236,10 @@ var murderViz = function createVisualizationOfMurders() {
       let barColorScale = d3.scaleQuantize()
         .range(barColors);
 
-      barColorScale.domain([d3.min(murdersByHour), d3.max(murdersByHour)]);
+      barColorScale.domain([d3.min(murdersByHour), maxMurdersByHour]);
 
       // Define bars and labels
-      var bars = barChart.selectAll('rect')
+      let bars = barChart.selectAll('rect')
         .data(murdersByHour)
         .enter()
         .append('rect')
@@ -193,7 +249,7 @@ var murderViz = function createVisualizationOfMurders() {
         .attr('height', d => h - barScales.y(d) - padding)
         .attr('fill', d => barColorScale(d));
 
-      var labels = barChart.selectAll('.bar-label')
+      let labels = barChart.selectAll('.bar-label')
         .data(murdersByHour)
         .enter()
         .append('text')
@@ -240,18 +296,16 @@ var murderViz = function createVisualizationOfMurders() {
           return;
         }
 
-        console.log('Selection removed; resetting brush');
-
         // Revert circles to initial style
         datapoints.classed('brushed', false);
         datapoints.classed('non-brushed', false);
 
         // Update y scale domain
-        barScales.y.domain([0, d3.max(murdersByHour)]);
+        barScales.y.domain([0, maxMurdersByHour]);
 
         barColorScale.domain([
           d3.min(murdersByHour),
-          d3.max(murdersByHour),
+          maxMurdersByHour,
         ]);
 
         // Apply new y axis with transition
@@ -285,7 +339,6 @@ var murderViz = function createVisualizationOfMurders() {
             let threshold = barScales.y.domain()[1] / 5;
             return (d < threshold) ? 'black' : 'white';
           });
-
       };
 
       let isBrushed = function (brushCoords, x) {
@@ -295,17 +348,28 @@ var murderViz = function createVisualizationOfMurders() {
         return x0 <= x && x <= x1;
       };
 
+      let clamp = function (n, lo, hi) {
+        if (n < lo) {
+          return lo;
+        } else if (n > hi) {
+          return hi;
+        }
+
+        return n;
+      };
+
+      let lastSelectionWidth = 0;
+
+      let selectionWidth = function getWidthOfCurrentSelection() {
+        let s = d3.event.selection;
+        return Math.abs(s[0] - s[1]);
+      };
+
       let onBrush = function brushHandler() {
         // If selection is not active, return.
         if (!d3.event.selection) {
           return;
         }
-
-        console.log('brushing');
-
-        // Revert circles to initial style
-        datapoints.classed('brushed', false);
-        datapoints.classed('non-brushed', false);
 
         let brushCoords = d3.brushSelection(this);
 
@@ -324,11 +388,17 @@ var murderViz = function createVisualizationOfMurders() {
         }
 
         // Map viz update
-        d3.selectAll(brushed).classed('brushed', true);
-        d3.selectAll(nonBrushed).classed('non-brushed', true);
+        let selectBrushed = d3.selectAll(brushed);
+        let selectNonBrushed = d3.selectAll(nonBrushed);
+        selectBrushed.classed('non-brushed', false)
+          .classed('brushed', true);
+
+        selectNonBrushed.classed('non-brushed', true)
+          .classed('brushed', false);
 
         // Bar chart update
-        let selectedData = d3.selectAll(brushed).data();
+        // Count selected datapoints by hour
+        let selectedData = selectBrushed.data();
         let murdersByHourSelection;
         if (selectedData.length !== 0) {
           murdersByHourSelection = new Array(24).fill(0);
@@ -340,34 +410,45 @@ var murderViz = function createVisualizationOfMurders() {
           murdersByHourSelection = murdersByHour;
         }
 
-        // Update y scale domain
-        barScales.y.domain([0, d3.max(murdersByHourSelection)]);
+        // Update y scale domain **only** if the width of the selection changed.
+        // Keep the scale the same if the user is merely moving the brush window.
+        let sw = selectionWidth();
+        if (lastSelectionWidth !== sw) {
+          lastSelectionWidth = sw;
+          let scalingFactor = sw / w;
+          let upperBound = 2 * maxMurdersByHour * scalingFactor;
 
-        barColorScale.domain([
-          d3.min(murdersByHourSelection),
-          d3.max(murdersByHourSelection),
-        ]);
+          // Don't go beneath 20 or above global max
+          barScales.y.domain([
+            0,
+            clamp(upperBound, 30, maxMurdersByHour),
+          ]);
 
-        // Apply new y axis with transition
-        barChart.selectAll('.y-axis')
-          .transition()
-          .duration(500)
-          .call(barAxes.y);
+          barColorScale.domain([
+            d3.min(murdersByHourSelection),
+            d3.max(murdersByHourSelection),
+          ]);
+
+          // Apply new y axis with transition
+          barChart.selectAll('.y-axis')
+            .transition()
+            .duration(50)
+            .call(barAxes.y);
+        }
 
         // Update bars
         bars.data(murdersByHourSelection)
           .transition()
-          .duration(500)
+          .duration(50)
           .attr('x', (d, i) => barScales.x(i))
           .attr('y', d => barScales.y(d))
           .attr('height', d => h - barScales.y(d) - padding)
           .attr('fill', d => barColorScale(d));
 
-
         // Update labels
         labels.data(murdersByHourSelection)
           .transition()
-          .duration(500)
+          .duration(50)
           .text(d => d)
           .attr('text-anchor', 'middle')
           .attr('x', (d, i) => {
