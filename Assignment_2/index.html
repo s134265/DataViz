@@ -40,7 +40,7 @@
                         <a href="#part1"> Part 1: Telling Data Stories</a>
                     </li>
                     <li>
-                        <a href="#part2"> Part 2: This is part 2</a>
+                        <a href="#part2"> Part 2: Visualizing reported murders in New York City</a>
                     </li>
                     <li>
                         <a href="#bibliography"> Bibliography</a>
@@ -82,24 +82,59 @@
             </div>
             <div class="post">
                 <p>
-                    <h3 id="part2"> Part 2: This is part two</h3>
-                    Text goes here.
+                    <h3 id="part2"> Part 2: Visualizing reported murders in New York City</h3>
+                    <p>
+                        The purpose of this section is to visualize reported murders in New York City from 2006 to 2016, both geographically and
+                        temporally. Two datasets were used:
+                        <ul>
+                            <li>
+                                a dataset specifying the global coordinates of each of the five boroughs and their features, and
+                            </li>
+                            <li>
+                                a dataset specifying each reported murder for the period, including the date of the report, the hour of the day at which
+                                the complaint was submitted, and the geographical location at which the murder allegedly
+                                took place.
+                            </li>
+                        </ul>
+                    </p>
+                    <p>
+                        The visualization is showcased in figure 1. You are invited to interact with the visualization in the following ways:
+                        <ul>
+                            <li>
+                                <strong>Click and drag</strong> in the timeline to visualize murders for a subset of the period.
+                                The vertical scale of the bar chart will update in accordance with the width of your current
+                                selection.
+                            </li>
+                            <li>
+                                <strong>Click</strong> the timeline outside the selection (marked gray if present) to reset the selection
+                                to the entire period.
+                            </li>
+                            <li>
+                                <strong>Click</strong> the 'Animate' button to quickly visualize how the distribution of murders--
+                                both in terms of location and time of day-- developed over the entire period. This part of
+                                the visualization implies a decrease in the total number of murders with roughly the same
+                                daily distribution (please see the bar chart on the right).
+                            </li>
+                        </ul>
+                    </p>
                 </p>
             </div>
-            <div class="post">
+            <div class="post" style="text-align: center; margin-bottom: 0; padding-bottom: 0;">
                 <h3>
-                    Title here
+                    Reported murders in New York City 2006-2016
                 </h3>
-                <button id="animate-button">Animate!</button>
-                <p>
-                    Showing murders from
-                    <span id="selection-domain"></span>
-                </p>
             </div>
             <div id="outer-container">
                 <div id="viz-container">
                     <div id="left-viz" class="chart"></div>
-                    <div id="right-viz" class="chart"></div>
+                    <div id="right-viz" class="chart">
+                        <p id="interval">
+                            Currently showing murders from
+                            <span id="selection-domain-lo"></span> to
+                            <span id="selection-domain-hi"></span>
+                        </p>
+                        <button id="animate-button">Animate</button>
+                    </div>
                     <!-- <div class="vertical-center">
                     </div> -->
                 </div>
@@ -108,25 +143,34 @@
                 <strong>Figure 1:</strong> Times and geographic locations of reported murders in New York City 2006–2016.
                 <br/>
                 <ul>
-                    <li><i>Top left:</i> Timeline showing the no. of reported murders per day between Jan 1st 2006 and Dec 31st 2016.</li>
-                    <li><i>Bottom left:</i> Geographic locations of reported murders for the days currently selected in the timeline.</li>
-                    <li><i>Right:</i> No. of murders reported for each hour of the day for all days currently selected in the timeline.</li>
+                    <li>
+                        <i>Top left:</i> Timeline showing the no. of reported murders per day between Jan 1st 2006 and Dec 31st
+                        2016.
+                    </li>
+                    <li>
+                        <i>Bottom left:</i> Geographic locations of reported murders for the days currently selected in the
+                        timeline.
+                    </li>
+                    <li>
+                        <i>Right:</i> No. of murders reported for each hour of the day for all days currently selected in the
+                        timeline.
+                    </li>
                 </ul>
             </div>
             <script src="./app.js"></script>
-        </div>
-        <div class="related">
-            <h3 id="bibliography">Bibliography</h3>
-            <ul style="list-style-type:none">
-                <li>
-                    <span>
-                        <a href="google.com">google.com</a>
-                    </span>
-                    <span>
-                        Accessed 20-03-2018
-                    </span>
-                </li>
-            </ul>
+            <div class="related">
+                <h3 id="bibliography">Bibliography</h3>
+                <ul style="list-style-type:none">
+                    <li>
+                        <span>
+                            <a href="google.com">google.com</a>
+                        </span>
+                        <span>
+                            Accessed 20-03-2018
+                        </span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     </div>

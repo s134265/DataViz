@@ -193,8 +193,14 @@ let murderViz = function createVisualizationOfMurders() {
       };
 
       // Show current brush selection in line chart as a date range
-      let selectionDomainLabel = d3.select('#selection-domain')
-        .text(formatDateRange(startDate, endDate));
+      let loLabel = d3.select('#selection-domain-lo');
+      let hiLabel = d3.select('#selection-domain-hi');
+      let updateSelectionLabel = function (lo, hi) {
+        loLabel.text(formatDateAsISO(lo));
+        hiLabel.text(formatDateAsISO(hi));
+      };
+
+      updateSelectionLabel(startDate, endDate);
 
       // Add axes to viz
       barChart.append('g')
@@ -250,8 +256,8 @@ let murderViz = function createVisualizationOfMurders() {
         .attr('y', '-20px')
         .attr('width', '180px')
         .attr('height', '30px')
-        .attr('stroke', 'lightgray')
-        .attr('stroke-width', '1px')
+        // .attr('stroke', 'lightgray')
+        // .attr('stroke-width', '1px')
         .attr('fill', 'none');
 
       let mapLegendSymbol = mapLegendGroup.append('circle')
@@ -351,8 +357,7 @@ let murderViz = function createVisualizationOfMurders() {
         ]);
 
         // Reset selection domain label
-        selectionDomainLabel.text(
-          formatDateRange(startDate, endDate));
+        updateSelectionLabel(startDate, endDate);
 
         // Apply new y axis with transition
         barChart.selectAll('.y-axis')
@@ -439,8 +444,11 @@ let murderViz = function createVisualizationOfMurders() {
         // Convert brush coordinates (px values) to dates first by using 
         // inverted time scale.
         let dateRange = brushCoords.map(lineScales.x.invert);
-        selectionDomainLabel.text(
-          formatDateRange(dateRange[0], dateRange[1]));
+        updateSelectionLabel(...dateRange);
+        // d3.select('#selection-domain-lo')
+        //   .text(formatDateAsISO(dateRange[0]));
+        // d3.select('#selection-domain-hi')
+        //   .text(formatDateAsISO(dateRange[1]));
 
         // Map viz update
         let selectBrushed = d3.selectAll(brushed);
