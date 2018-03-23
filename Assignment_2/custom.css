@@ -12,7 +12,35 @@
 }
 
 svg {
-  display: inline-block;
+  display: block;
+  margin: auto;
+}
+
+div#viz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+div#map-linechart {
+  /* display: inline-block; */
+  width: 40%;
+  float: left;
+}
+
+div#barchart {
+  position: relative;
+  /* top: 25%; */
+  transform: translateY(25%);
+  margin: 0 auto;
+  width: 40%;
+  float: left;
+}
+
+div.vertical-center {
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .datapoint {
@@ -21,6 +49,14 @@ svg {
   stroke-width: 0.25;
   opacity: 0.75;
   r: 3px;
+}
+
+.datapoint-legend {
+  fill: rgb(0, 255, 255);
+  stroke: black;
+  stroke-width: 1;
+  opacity: 0.75;
+  r: 4px;
 }
 
 .brushed {
@@ -44,7 +80,7 @@ svg {
   font-weight: bold;
   fill: black;
   stroke: white;
-  stroke-width: 1px;
+  stroke-width: 0.5px;
 }
 
 rect.selection {

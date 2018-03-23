@@ -2,9 +2,9 @@ let murderViz = function createVisualizationOfMurders() {
   let murderDataPath = './data/all_murders.csv';
   let boroughDataPath = './data/boroughs.geojson';
 
-  let w = 800;
-  let h = 500;
-  let padding = 70;
+  let lineDims = { w: 800, h: 300, padding: 70 };
+  let barDims = { w: 800, h: 500, padding: 70 };
+  let mapDims = { w: 600, h: 500 };
 
   // HELPERS //
   let formatDateAsISO = d3.timeFormat('%Y/%m/%d');
@@ -18,31 +18,24 @@ let murderViz = function createVisualizationOfMurders() {
 
   // Define projection
   let projection = d3.geoMercator()
+    .translate([300, 250])
     .center(nyc)
     .scale([50000]);
 
-  let map = d3.select('body')
+  let lineChart = d3.select('#map-linechart')
     .append('svg')
-    .attr('width', w)
-    .attr('height', h)
-    .on('click', () => {
-      // This is used for assigning positions to labels
-      let coords = d3.mouse(map.node());
-      console.log({
-        x: `${coords[0] / w * 100}%`,
-        y: `${coords[1] / h * 100}%`,
-      });
-    });
+    .attr('width', lineDims.w)
+    .attr('height', lineDims.h);
 
-  let lineChart = d3.select('body')
+  let map = d3.select('#map-linechart')
     .append('svg')
-    .attr('width', w)
-    .attr('height', h);
+    .attr('width', mapDims.w)
+    .attr('height', mapDims.h);
 
-  let barChart = d3.select('body')
+  let barChart = d3.select('#barchart')
     .append('svg')
-    .attr('width', w)
-    .attr('height', h);
+    .attr('width', barDims.w)
+    .attr('height', barDims.h);
 
   d3.json(boroughDataPath, (err, boroughs) => {
     if (err) {
@@ -124,12 +117,11 @@ let murderViz = function createVisualizationOfMurders() {
       let barScales = {
         x: d3.scaleBand()
           .domain(d3.range(24))
-          .rangeRound([padding, w - padding])
-          .rangeRound([padding, w - padding])
+          .rangeRound([barDims.padding, barDims.w - barDims.padding])
           .paddingInner(0.05),
         y: d3.scaleLinear()
           .domain([0, maxMurdersByHour])
-          .range([h - padding, padding]),
+          .range([barDims.h - barDims.padding, barDims.padding]),
       };
       let barAxes = {
         x: d3.axisBottom()
@@ -143,7 +135,7 @@ let murderViz = function createVisualizationOfMurders() {
       // Parse date string in US notation to date object
       const parseTime = d3.timeParse('%m/%d/%Y');
 
-      // Following was added because we only have murder entries and should
+      // The following was added because we only have murder entries and should
       // visualize days-- including days without murders. The following creates
       // an array on the form 
       //   [{key: <date>, value: <count>}, {key: <date>, value: <count>}, ...]
@@ -157,9 +149,10 @@ let murderViz = function createVisualizationOfMurders() {
         .object(murders);
 
       // Set start date and end date for domain
-      let dates = Object.keys(murdersByDayHash);
-      let startDate = d3.min(dates, d => parseTime(d));
-      let endDate = d3.max(dates, d => parseTime(d));
+      let dates = Object.keys(murdersByDayHash).map(parseTime);
+      let sortedDates = dates.sort(d3.ascending);
+      let startDate = sortedDates[0];
+      let endDate = sortedDates[sortedDates.length - 1];
 
       // Create an array of all dates in the interval. Iterate over the interval
       // and add any dates to murdersByDayHash where no murders occurred.
@@ -169,13 +162,6 @@ let murderViz = function createVisualizationOfMurders() {
           murdersByDayHash[d] = 0;
         }
       }
-
-      console.log(startDate);
-      console.log(endDate);
-      console.log(timeDomain[0], timeDomain[timeDomain.length - 1]);
-      
-      
-      
 
       // To ensure compatibility with the rest of code, which was originally 
       // written to suit d3.nest().<...>.rollup().
@@ -189,13 +175,13 @@ let murderViz = function createVisualizationOfMurders() {
       let lineScales = {
         x: d3.scaleTime()
           .domain([startDate, endDate])
-          .range([padding, w - padding]),
+          .range([lineDims.padding, lineDims.w - lineDims.padding]),
         y: d3.scaleLinear()
           .domain([
             d3.min(murdersByDay, d => d.value),
             d3.max(murdersByDay, d => d.value),
           ])
-          .range([h - padding, padding]),
+          .range([lineDims.h - lineDims.padding, lineDims.padding]),
       };
       let lineAxes = {
         x: d3.axisBottom()
@@ -212,63 +198,63 @@ let murderViz = function createVisualizationOfMurders() {
       // Add axes to viz
       barChart.append('g')
         .attr('class', 'x-axis')
-        .attr('transform', `translate(0, ${h - padding})`)
+        .attr('transform', `translate(0, ${barDims.h - barDims.padding})`)
         .call(barAxes.x);
       barChart.append('g')
         .attr('class', 'y-axis')
-        .attr('transform', `translate(${padding}, 0)`)
+        .attr('transform', `translate(${barDims.padding}, 0)`)
         .call(barAxes.y);
 
       lineChart.append('g')
         .attr('class', 'x-axis')
-        .attr('transform', `translate(0, ${h - padding})`)
+        .attr('transform', `translate(0, ${lineDims.h - lineDims.padding})`)
         .call(lineAxes.x);
       lineChart.append('g')
         .attr('class', 'y-axis')
-        .attr('transform', `translate(${padding}, 0)`)
+        .attr('transform', `translate(${lineDims.padding}, 0)`)
         .call(lineAxes.y);
 
       // Axis labels
       barChart.append('text')
         .attr('class', 'axis-label')
-        .attr('x', w / 2)
-        .attr('y', h - 30)
+        .attr('x', barDims.w / 2)
+        .attr('y', barDims.h - 30)
         .text('Hour of day');
       barChart.append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('y', 35)
-        .attr('x', -h / 2)
+        .attr('x', -barDims.h / 2)
         .text('No. of murders');
 
       lineChart.append('text')
         .attr('class', 'axis-label')
-        .attr('x', w / 2)
-        .attr('y', h - 30)
+        .attr('x', lineDims.w / 2)
+        .attr('y', lineDims.h - 30)
         .text('Date');
       lineChart.append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('y', 35)
-        .attr('x', -h / 2)
+        .attr('x', -lineDims.h / 2)
         .text('No. of murders');
 
       // Legends
       let mapLegendGroup = map.append('g')
         .attr('id', 'legend')
-        .attr('transform', `translate(${w / 4}, ${h / 4})`);
+        .attr('transform', `translate(${lineDims.w / 6}, ${lineDims.h / 4})`);
 
       let mapLegendBox = mapLegendGroup.append('rect')
         .attr('x', '-20px')
         .attr('y', '-20px')
-        .attr('width', '180px')
+        .attr('width', '200px')
         .attr('height', '30px')
         .attr('stroke', 'lightgray')
         .attr('stroke-width', '1px')
         .attr('fill', 'none');
 
       let mapLegendSymbol = mapLegendGroup.append('circle')
-        .attr('class', 'datapoint')
+        .attr('class', 'datapoint-legend')
         .attr('cx', -10)
         .attr('cy', -5)
         .attr('pointer-events', 'none');
@@ -276,7 +262,7 @@ let murderViz = function createVisualizationOfMurders() {
       let mapLegendText = mapLegendGroup.append('text')
         .text('Location of reported murder')
         .attr('font-family', 'sans-serif')
-        .attr('font-size', '12px');
+        .attr('font-size', '14px');
 
       // BAR CHART //
       // Define quantize scale to sort data values into buckets of color
@@ -294,7 +280,7 @@ let murderViz = function createVisualizationOfMurders() {
         .attr('x', (d, i) => barScales.x(i))
         .attr('y', d => barScales.y(d))
         .attr('width', barScales.x.bandwidth())
-        .attr('height', d => h - barScales.y(d) - padding)
+        .attr('height', d => barDims.h - barScales.y(d) - barDims.padding)
         .attr('fill', d => barColorScale(d));
 
       let labels = barChart.selectAll('.bar-label')
@@ -329,7 +315,7 @@ let murderViz = function createVisualizationOfMurders() {
       });
 
       console.log(sortedByDate[0], sortedByDate[sortedByDate.length - 1]);
-      
+
 
       let line = d3.line()
         .x(d => lineScales.x(parseTime(d.key)))
@@ -375,7 +361,7 @@ let murderViz = function createVisualizationOfMurders() {
         bars.data(murdersByHour)
           .attr('x', (d, i) => barScales.x(i))
           .attr('y', d => barScales.y(d))
-          .attr('height', d => h - barScales.y(d) - padding)
+          .attr('height', d => barDims.h - barScales.y(d) - barDims.padding)
           .attr('fill', d => barColorScale(d));
 
         // Update labels
@@ -419,7 +405,7 @@ let murderViz = function createVisualizationOfMurders() {
 
       let lastSelectionWidth = 0;
 
-      let selectionWidth = function getWidthOfCurrentSelection() {
+      let selectionWidth = function getWidthOfCurrentBrushSelection() {
         let s = d3.event.selection;
         return Math.abs(s[0] - s[1]);
       };
@@ -468,14 +454,9 @@ let murderViz = function createVisualizationOfMurders() {
         // Count selected datapoints by hour
         let selectedData = selectBrushed.data();
         let murdersByHourSelection;
-        if (selectedData.length !== 0) {
-          murdersByHourSelection = new Array(24).fill(0);
-          for (const m of selectedData) {
-            murdersByHourSelection[m.hour]++;
-          }
-        } else {
-          // If no data was selected => plot all murders
-          murdersByHourSelection = murdersByHour;
+        murdersByHourSelection = new Array(24).fill(0);
+        for (const m of selectedData) {
+          murdersByHourSelection[m.hour]++;
         }
 
         // Update y scale domain **only** if the width of the selection changed.
@@ -483,10 +464,10 @@ let murderViz = function createVisualizationOfMurders() {
         let sw = selectionWidth();
         if (lastSelectionWidth !== sw) {
           lastSelectionWidth = sw;
-          let scalingFactor = sw / w;
+          let scalingFactor = sw / lineDims.w;
           let upperBound = 2 * maxMurdersByHour * scalingFactor;
 
-          // Don't go beneath 20 or above global max
+          // Don't go beneath 30 or above global max
           barScales.y.domain([
             0,
             clamp(upperBound, 30, maxMurdersByHour),
@@ -510,7 +491,7 @@ let murderViz = function createVisualizationOfMurders() {
           .duration(50)
           .attr('x', (d, i) => barScales.x(i))
           .attr('y', d => barScales.y(d))
-          .attr('height', d => h - barScales.y(d) - padding)
+          .attr('height', d => barDims.h - barScales.y(d) - barDims.padding)
           .attr('fill', d => barColorScale(d));
 
         // Update labels
@@ -538,7 +519,10 @@ let murderViz = function createVisualizationOfMurders() {
       };
 
       let brush = d3.brushX()
-        .extent([[padding, padding], [w - padding, h - padding]])
+        .extent([
+          [lineDims.padding, lineDims.padding],
+          [lineDims.w - lineDims.padding, lineDims.h - lineDims.padding],
+        ])
         .on('brush', onBrush)
         .on('end', reset);
 
@@ -554,8 +538,14 @@ let murderViz = function createVisualizationOfMurders() {
 
           const selectionWidth = 100;
           const bounds = {
-            start: [padding, padding + selectionWidth],
-            end: [w - padding - selectionWidth, w - padding],
+            start: [
+              lineDims.padding,
+              lineDims.padding + selectionWidth,
+            ],
+            end: [
+              lineDims.w - lineDims.padding - selectionWidth,
+              lineDims.w - lineDims.padding,
+            ],
           };
 
           brushGroup.call(brush.move, bounds.start)
