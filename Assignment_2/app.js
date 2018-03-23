@@ -2,12 +2,12 @@ let murderViz = function createVisualizationOfMurders() {
   let murderDataPath = './data/all_murders.csv';
   let boroughDataPath = './data/boroughs.geojson';
 
-  let lineDims = { w: 800, h: 300, padding: 70 };
-  let barDims = { w: 800, h: 500, padding: 70 };
-  let mapDims = { w: 600, h: 500 };
+  let lineDims = { w: 600, h: 150, padding: 30 };
+  let barDims = { w: 700, h: 500, padding: 70 };
+  let mapDims = { w: 700, h: 500 };
 
   // HELPERS //
-  let formatDateAsISO = d3.timeFormat('%Y/%m/%d');
+  let formatDateAsISO = d3.timeFormat('%Y-%m-%d');
   let formatDateRange = function (lo, hi, sep = ' to ') {
     return `${formatDateAsISO(lo)}${sep}${formatDateAsISO(hi)}`;
   };
@@ -22,17 +22,17 @@ let murderViz = function createVisualizationOfMurders() {
     .center(nyc)
     .scale([50000]);
 
-  let lineChart = d3.select('#map-linechart')
+  let lineChart = d3.select('#left-viz')
     .append('svg')
     .attr('width', lineDims.w)
     .attr('height', lineDims.h);
 
-  let map = d3.select('#map-linechart')
+  let map = d3.select('#left-viz')
     .append('svg')
     .attr('width', mapDims.w)
     .attr('height', mapDims.h);
 
-  let barChart = d3.select('#barchart')
+  let barChart = d3.select('#right-viz')
     .append('svg')
     .attr('width', barDims.w)
     .attr('height', barDims.h);
@@ -188,7 +188,8 @@ let murderViz = function createVisualizationOfMurders() {
           .scale(lineScales.x)
           .ticks(d3.timeYear.every(1)),
         y: d3.axisLeft()
-          .scale(lineScales.y),
+          .scale(lineScales.y)
+          .ticks(5),
       };
 
       // Show current brush selection in line chart as a date range
@@ -230,24 +231,24 @@ let murderViz = function createVisualizationOfMurders() {
       lineChart.append('text')
         .attr('class', 'axis-label')
         .attr('x', lineDims.w / 2)
-        .attr('y', lineDims.h - 30)
+        .attr('y', lineDims.h)
         .text('Date');
       lineChart.append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 35)
+        .attr('y', 10)
         .attr('x', -lineDims.h / 2)
         .text('No. of murders');
 
       // Legends
       let mapLegendGroup = map.append('g')
         .attr('id', 'legend')
-        .attr('transform', `translate(${lineDims.w / 6}, ${lineDims.h / 4})`);
+        .attr('transform', `translate(${lineDims.w / 6}, ${lineDims.h})`);
 
       let mapLegendBox = mapLegendGroup.append('rect')
         .attr('x', '-20px')
         .attr('y', '-20px')
-        .attr('width', '200px')
+        .attr('width', '180px')
         .attr('height', '30px')
         .attr('stroke', 'lightgray')
         .attr('stroke-width', '1px')
@@ -262,7 +263,7 @@ let murderViz = function createVisualizationOfMurders() {
       let mapLegendText = mapLegendGroup.append('text')
         .text('Location of reported murder')
         .attr('font-family', 'sans-serif')
-        .attr('font-size', '14px');
+        .attr('font-size', '12px');
 
       // BAR CHART //
       // Define quantize scale to sort data values into buckets of color

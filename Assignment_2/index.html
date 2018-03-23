@@ -96,11 +96,22 @@
                     <span id="selection-domain"></span>
                 </p>
             </div>
-            <div class="post" id="viz">
-                <div id="map-linechart" class="chart"></div>
-                <div id="barchart" class="chart"></div>
-                <!-- <div class="vertical-center">
-                </div> -->
+            <div id="outer-container">
+                <div id="viz-container">
+                    <div id="left-viz" class="chart"></div>
+                    <div id="right-viz" class="chart"></div>
+                    <!-- <div class="vertical-center">
+                    </div> -->
+                </div>
+            </div>
+            <div class="caption">
+                <strong>Figure 1:</strong> Times and geographic locations of reported murders in New York City 2006–2016.
+                <br/>
+                <ul>
+                    <li><i>Top left:</i> Timeline showing the no. of reported murders per day between Jan 1st 2006 and Dec 31st 2016.</li>
+                    <li><i>Bottom left:</i> Geographic locations of reported murders for the days currently selected in the timeline.</li>
+                    <li><i>Right:</i> No. of murders reported for each hour of the day for all days currently selected in the timeline.</li>
+                </ul>
             </div>
             <script src="./app.js"></script>
         </div>

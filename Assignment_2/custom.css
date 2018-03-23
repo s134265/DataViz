@@ -11,6 +11,40 @@
   fill: teal;
 }
 
+#outer-container {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#viz-container {
+  width: 220%;
+  margin-left: -60%;
+  /* background-color: lightgray; */
+}
+
+#left-viz {
+  display: inline-block;
+  width: 650px;
+  vertical-align: top;
+  /* background-color: grey; */
+  margin-right: 1%;
+}
+
+#right-viz {
+  display: inline-block;
+  width: 650px;
+  /* background-color: grey; */
+  transform: translateY(15%);
+  margin-left: 1%;
+}
+
+.caption {
+  /* text-align: center; */
+  /* width: 1000px; */
+  text-justify: left;
+}
+
 svg {
   display: block;
   margin: auto;
