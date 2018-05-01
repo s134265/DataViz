@@ -1,0 +1,151 @@
+.axis path,
+.axis line {
+  stroke: teal;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: Optima, Futura, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  fill: teal;
+}
+
+#outer-container {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#viz-container {
+  width: 220%;
+  margin-left: -60%;
+  /* background-color: lightgray; */
+}
+
+#left-viz {
+  display: inline-block;
+  width: 650px;
+  vertical-align: top;
+  /* background-color: grey; */
+  margin-right: 1%;
+}
+
+#right-viz {
+  display: inline-block;
+  width: 650px;
+  /* background-color: grey; */
+  transform: translateY(15%);
+  margin-left: 1%;
+}
+
+.caption {
+  /* text-align: center; */
+  /* width: 1000px; */
+  text-justify: left;
+}
+
+p#interval {
+  color: #333;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+#selection-domain {
+  font-weight: bold;
+}
+
+svg {
+  display: block;
+  margin: auto;
+}
+
+div#viz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+div#map-linechart {
+  /* display: inline-block; */
+  width: 40%;
+  float: left;
+}
+
+div#barchart {
+  position: relative;
+  /* top: 25%; */
+  transform: translateY(10%);
+  margin: 0 auto;
+  width: 40%;
+  float: left;
+}
+
+div.vertical-center {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.datapoint {
+  fill: rgb(0, 255, 255);
+  stroke: black;
+  stroke-width: 0.25;
+  opacity: 0.75;
+  r: 3px;
+}
+
+.datapoint-legend {
+  fill: rgb(0, 255, 255);
+  stroke: black;
+  stroke-width: 1;
+  opacity: 0.75;
+  r: 4px;
+}
+
+.brushed {
+  fill: rgb(255, 255, 0);
+}
+
+.non-brushed {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: teal;
+  stroke-width: 0.5;
+}
+
+.borough-label {
+  text-anchor: middle;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  fill: black;
+  stroke: white;
+  stroke-width: 0.5px;
+}
+
+rect.selection {
+  stroke: none;
+}
+
+button {
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+.axis-label {
+  fill: black;
+  text-anchor: middle;
+  font-size: 11px;
+}
+
+#selection-domain-lo {
+  font-weight: bold;
+}
+
+#selection-domain-hi {
+  font-weight: bold;
+}
