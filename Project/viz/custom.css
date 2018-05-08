@@ -34,8 +34,6 @@
 #right-viz {
   display: inline-block;
   width: 650px;
-  /* background-color: grey; */
-  transform: translateY(15%);
   margin-left: 1%;
 }
 
