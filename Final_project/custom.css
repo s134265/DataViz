@@ -1,16 +1,20 @@
 .axis path,
 .axis line {
-  stroke: teal;
+  stroke: rgb(230, 230, 230);
   shape-rendering: crispEdges;
 }
 
 .axis text {
-  font-family: Optima, Futura, sans-serif;
-  font-weight: bold;
+  font-family: PT-sans, Futura, sans-serif;
+  font-weight: lighter;
   font-size: 14px;
-  fill: teal;
+  fill: #303030;
 }
-
+.label {
+  font-family: PT-sans, Futura, sans-serif;
+  font-size: 14px;
+  fill: cyan;
+}
 #outer-container {
   text-align: center;
   width: 100%;
