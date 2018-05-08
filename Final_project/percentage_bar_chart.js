@@ -4,7 +4,7 @@ let arrestsDataPath = './data/austin_arrests_2016.csv';
 let zipCodeAreasPath = './data/austin_area_zip_codes.geojson';
 
 var margin = { top: 60, right: 50, bottom: 35, left: 227 };
-var colors = { stops: "#FFECB3", stopsKnown: "#6A1B9A", stopsHover: "#98abc5", stopsKnownHover: "gray" };
+var colors = { stops: "#973490", stopsKnown: "#E96A8D", stopsHover: "#B8428C", stopsKnownHover: "#EE8B97" };
 zipToBeLoaded = 78702;
 var widther = window.outerWidth;
 var width = widther - margin.left - margin.right,
