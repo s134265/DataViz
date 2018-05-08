@@ -1,11 +1,11 @@
 //Margin conventions
 let zipDataPath = '/data/zip_specific_stats.csv';
-var margin = { top: 20, right: 50, bottom: 20, left: 227 };
-var colors = { stops: "red", stopsKnown: "black", stopsHover: "orange", stopsKnownHover: "gray" };
+var margin = { top: 60, right: 50, bottom: 35, left: 227 };
+var colors = { stops: "#FFECB3", stopsKnown: "#6A1B9A", stopsHover: "#98abc5", stopsKnownHover: "gray" };
 zipToBeLoaded = 78702;
 var widther = window.outerWidth;
 var width = widther - margin.left - margin.right,
-    height = 230 - margin.top - margin.bottom;
+    height = 250 - margin.top - margin.bottom;
 
 var barHeight = height / 10;
 
@@ -22,28 +22,48 @@ var svg = d3.select(".g-chart").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //Title
-percentageBarChartTitle = svg.append("text")
+percentageBarChartTitle = svg.append('text')
     .attr("x", (width / 2))
-    .attr("y", -margin.top / 3)
+    .attr("y", -margin.top / 1.3)
     .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .text("Percentage of stops by race for selected zip-code");
-names = ["Race unknown", "Race unknown", "Race known"];
+    .text("Percentage of stops by race for selected zip-code")
+    .attr('class', 'title');
+console.log(percentageBarChartTitle);
 
-legend = svg.selectAll("text")
+names = ["Race unknown", "Race known"];
+
+legend = svg.selectAll(".legend")
     .data(names)
     .enter()
     .append('text')
     .text(function (d, i) {
         return d;
     })
-    .attr("x", (width / 2))
+    .attr('x', function (d, i) { return (150 * i) })
     .attr("y", function (d, i) {
-        return (margin.top + i * 14);
+        return (-margin.top / 3);
     })
     .attr("text-anchor", "left")
-    .style("font-size", "16px");
+    .style("font-size", "16px")
+    .attr('class', 'legend');
 
+legendCircles = svg.selectAll('.legendCircles')
+    .data(names)
+    .enter()
+    .append('circle')
+    .attr("cx", function (d, i) {
+        return (150 * i - 10);
+    })
+    .attr("cy", function (d, i) {
+        return (-margin.top / 2.3);
+    })
+    .attr('r', 4)
+    .attr('fill', function (d, i) {
+        var color;
+        if (i == 0) { color = colors['stops'] }
+        else { color = colors['stopsknown'] }
+        return (color);
+    })
 
 
 //Creates the xScale 
@@ -150,16 +170,6 @@ let convertRowToObject = function (row, keyStartIndex, keyEndIndex) {
     return (data)
 }
 
-let filterObjectByOccurences = function (dataWithOccurences, dataToBeFiltered){
-    filteredData = [];
-    for (let i = 0; i < dataWithOccurences.length; i++) {
-        if (dataWithOccurences[i].num>1){
-            filteredData.push(dataToBeFiltered[i])
-        }
-    }
-    return(filteredData);
-}
-
 var formatComma = d3.format(".1f");
 
 d3.csv(zipDataPath, rowConverter, (err, zips) => {
@@ -167,13 +177,13 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         throw err;
     }
     console.log(zips);
+
     var rowIndex = rowExtractor(zipToBeLoaded, zips);
     row = zips[rowIndex];
+    var totalStops = row.white + row.black + row.hispanic_or_latino + row.asian + row.middle_eastern + row.unknown + row.hawaiian_pacific_islander + row.american_indian_alaskan_native;
     var dataStops = convertRowToObject(row, 1, 9);
     var dataRacePreviouslyKnown = convertRowToObject(row, 9, 17);
-    dataStops = filterObjectByOccurences(dataStops, dataStops);
-    dataRacePreviouslyKnown = filterObjectByOccurences(dataStops, dataRacePreviouslyKnown);
-    
+
     //FORMAT data
     dataStops.forEach(function (d) {
         d.num = +d.num;
@@ -207,7 +217,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         .attr("height", barHeight - 1)
         .attr("class", "bar")
         .attr("transform", "translate(0,4)")
-        .attr("fill", "red")
+        .attr("fill", colors.stops)
         .attr("transform", function (d) {
             return "translate(0," + y0(d.race) + ")";
         })
@@ -230,7 +240,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         })
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
-        .attr("fill", "black");
+        .attr("fill", colors.stopsKnown);
 
     //Appends main bar labels
     var barLabels = svg.selectAll('.label')
@@ -249,14 +259,6 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
                 return xScale(d.num) + 6;
             }
         })
-        .style("fill", function (d) {
-            if (minX > 32) {
-                return "white";
-            }
-            else {
-                return "#696969";
-            }
-        })
         .attr("y", y0.bandwidth() / 1)
 
         .attr("transform", function (d) {
@@ -264,6 +266,11 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
             return "translate(0," + y0(d.race) + ")";
         })
         .attr('class', 'label');
+    var totalStopsLabel = svg.append('text')
+        .text('Total number of stops: ' + totalStops)
+        .attr('x', 0)
+        .attr('y', height + margin.bottom/1.1)
+        .attr('class', 'totalStopsLabel');
 
     //Appends timestamp text  
     d3.select(".g-source-reg")
@@ -276,7 +283,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         .attr("class", "g-source-bold");
 
 
-      resized();
+    resized();
 
     //On updated zip values
     d3.select('#selectNumber')
@@ -288,7 +295,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
             row = zips[rowIndex];
             dataStops = convertRowToObject(row, 1, 9);
             dataRacePreviouslyKnown = convertRowToObject(row, 9, 17);
-
+            totalStops = row.white + row.black + row.hispanic_or_latino + row.asian + row.middle_eastern + row.unknown + row.hawaiian_pacific_islander + row.american_indian_alaskan_native;
             //FORMAT data
             dataStops.forEach(function (d) {
                 d.num = +d.num;
@@ -321,7 +328,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", "red")
+            .attr("fill", colors.stopsKnown)
 
         //exit 
         bars.exit()
@@ -348,7 +355,7 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         barRaceKnown.enter()
             .append("rect")
             .attr("class", "barRaceKnown")
-            .attr("fill", "red")
+            .attr("fill", colors.stopsKnown)
 
         //exit 
         barRaceKnown.exit()
@@ -416,6 +423,11 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
             .attr("transform", function (d) {
                 return "translate(0," + y0(d.race) + ")";
             });
+        var totalStopsLabel = svg.selectAll('.totalStopsLabel')
+            .text('Total number of stops: ' + totalStops)
+            .attr('x', 0)
+            .attr('y', height + margin.bottom/1.1)
+            .attr('class', 'totalStopsLabel');
     }
 
     function resized() {
@@ -428,11 +440,11 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         d3.select("svg")
             .attr("width", w);
         percentageBarChartTitle
-            .attr('x', (w - newMargin.right - newMargin.left) / 2)
+            .attr('x', newMargin.left / 2)
             .attr("text-anchor", "middle");
         legend
-            .attr('x', (w - newMargin.right - newMargin.left)/1.2)
-        
+            .attr('x', function (d, i) { return (150 * i) });
+
         //Change the xScale
         xScale
             .range([0, w - newMargin.right - newMargin.left]);
@@ -473,14 +485,16 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         var hoverText;
 
         if (d.race.includes("Known")) {
-            hoverColor = "gray";
+            hoverColor = colors.stopsKnownHover;
             hoverText = row['' + d.race];
         }
         else {
-            hoverColor = "orange";
+            hoverColor = colors.stopsHover;
             hoverText = row['' + d.race + ''] - row['' + d.race + 'isRaceKnown'];
         }
         d3.select(this)
+            .transition()
+            .duration(100)
             .attr("fill", hoverColor);
         div.transition()
             .duration(200)
@@ -494,15 +508,17 @@ d3.csv(zipDataPath, rowConverter, (err, zips) => {
         var hoverColor;
         var hoverText;
         if (d.race.includes("Known")) {
-            unHoverColor = "black";
+            unHoverColor = colors.stopsKnown;
         }
         else {
-            unHoverColor = "red";
+            unHoverColor = colors.stops;
         }
         div.transition()
             .duration(500)
             .style("opacity", 0);
         d3.select(this)
+            .transition()
+            .duration(100)
             .attr("fill", unHoverColor);
     }
 });

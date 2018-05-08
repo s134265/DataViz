@@ -10,10 +10,27 @@
   font-size: 14px;
   fill: #303030;
 }
+.legend{
+  font-family: PT-sans, Futura, sans-serif;
+  fill: #303030;
+}
+.totalStopsLabel{
+  font-family: PT-sans, Futura, sans-serif;
+  font-weight: lighter;
+  font-size: 12px;
+  fill: #303030;
+}
 .label {
   font-family: PT-sans, Futura, sans-serif;
-  font-size: 14px;
-  fill: cyan;
+  font-weight: lighter;
+  font-size: 12px;
+  fill: #303030;
+}
+.title {
+  font-family: PT-sans, Futura, sans-serif;
+  font-size: 16px;
+  font-weight: light;
+  fill: #303030;
 }
 #outer-container {
   text-align: center;
