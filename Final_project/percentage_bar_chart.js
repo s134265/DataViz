@@ -89,7 +89,7 @@ percentageBarChartTitle = svg.append('text')
   .attr("text-anchor", "middle")
   .text("Percentage of stops by race for selected zip-code: " + zipToBeLoaded)
   .attr('class', 'title');
-console.log(percentageBarChartTitle);
+
 
 names = ["Race unknown", "Race known"];
 
@@ -284,7 +284,7 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       }
       // DELETE ABOVE
 
-      console.log(zips);
+
 
       var rowIndex = rowExtractor(zipToBeLoaded, zips);
       row = zips[rowIndex];
@@ -777,38 +777,65 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         if (err) {
           throw err;
         }
-        console.log(classes)
+
+        const zipCodeSet2 = new Set(arrestZipCodes);
+
         const classZipCodes = classes.map(classes => classes.zipsCode);
         const classCodeSet = new Set(classZipCodes);
-        
         const classValues = classes.map(classes => classes.classValue);
 
         let areas2 = areasFeatureCollection.features.filter((area) => {
-          return zipCodeSet.has(area.properties.zipcode);
+          return zipCodeSet2.has(area.properties.zipcode);
           });
         
         let areasclass = areasFeatureCollection.features.filter((area) => {
           return classCodeSet.has(area.properties.zipcode);
          });
-        
+
+
         // Assign colors to areas
         // let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
         const maxClassValue = d3.max(classValues)
         
+       function findvaluenow(array,searchvalue) {
+        for (let j = 0; j < array.length; j++) {
+          if (array[j].zipsCode == searchvalue) {
+            
+           return array[j].classValue;
+          }
+          
+        };
+       }
+
+
         for (let i = 0; i < areas2.length; i++) {
           areas2[i].color = rgbToHex(0,0,0);
+          areas2[i].label = 'No Data Available'
         }
 
         for (let i = 0; i < areasclass.length; i++) {
-          if (classValues[i] < 1) {
+
+          classValueNow = findvaluenow(classes,areasclass[i].properties.zipcode)
+
+          if (classValueNow < 1) {
             areasclass[i].color = rgbToHex(100,255,100);
           } else {
-              r = Math.round(classValues[i]/maxClassValue*(255-100))+100
-              g = 255-Math.round(classValues[i]/maxClassValue*(255-100))
+              r = Math.round(classValueNow/maxClassValue*(255-100))+100
+              g = 255-Math.round(classValueNow/maxClassValue*(255-100))
               b = 100
               areasclass[i].color = rgbToHex(r,g,b)
           };
+          areasclass[i].label = 'The racial index for this zip code is ' + classValues[i] 
         }
+        
+        var tooltip = d3.select("body")
+          .append("div")
+          .style("position", "absolute")
+          .style("z-index", "10")
+          .style("visibility", "hidden")
+          .text("a simple tooltip");
+
+        d3.select()
 
         let areaPaths = heatMap.selectAll('path')
           .data(areas2)
@@ -816,6 +843,9 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .append('path')
           .attr('d', heatPath)
           .style('fill', d => d.color)
+     
+
+
 
         let areaPath2 = heatMap.selectAll('path')
           .data(areasclass)
@@ -824,52 +854,7 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .attr('d', heatPath)
           .style('fill', d => d.color)
 
-        function handleMouseOver(d, i) {
-          var hoverColor;
-          var hoverText;
 
-          if (d.race.includes("Known")) {
-            hoverColor = colors.stopsKnownHover;
-            hoverText = row['' + d.race];
-           }
-          else {
-            hoverColor = colors.stopsHover;
-            hoverText = row['' + d.race + ''] - row['' + d.race + 'isRaceKnown'];
-          }
-          d3.select(this)
-            .transition()
-            .duration(100)
-            .attr("fill", hoverColor);
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div.html(hoverText + " stops")
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-
-        /*detailMap.selectAll('circle')
-          .attr('fill', function(d){
-            console.log(d.arrestee.race);
-            return 'black';})*/
-      }
-
-      function handleMouseOut(d, i) {
-        var hoverColor;
-        var hoverText;
-        if (d.race.includes("Known")) {
-          unHoverColor = colors.stopsKnown;
-        }
-        else {
-          unHoverColor = colors.stops;
-        }
-        div.transition()
-          .duration(500)
-          .style("opacity", 0);
-        d3.select(this)
-          .transition()
-          .duration(100)
-          .attr("fill", unHoverColor);
-      }
 
       });
     });
