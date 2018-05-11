@@ -44,28 +44,54 @@
             </div>
             <div class="post">
                 <p>
-                    As we all know, Austin is a peace-loving, liberal city welcoming to all. Unfortunately a wave of racially profiled traffic
-                    stop has swept the lone star state, bla bla bla
+                    Being accused or suspected on the basis of race, ethnicity or religion is neither fun nor legal. Unfortunately, the practice
+                    of
+                    <a href="https://www.aclu.org/other/racial-profiling-definition" title="racial profiling: definition">racial profiling</a> has been an increasingly popular term in the U.S. In 2015,
+                    <a href="http://www.kxan.com/news/local/austin/austin-police-monitor-wants-more-done-to-prevent-racial-profiling_20180227105309592/994782265">1,134 people in Austin, TX</a> filed complaints related to racial profiling by local enforcement. And
+                    the problems persists; in 2017
+                    <a href="https://www.huffingtonpost.com/entry/texas-gives-a-green-light-to-racial-profiling_us_59509915e4b0c85b96c65ac5">The state of Texas</a> passed a bill, commanding all police officers to search anyone who "looks like
+                    an immigrant". In this project we examine relationships between geographic occurences of traffic stops
+                    by Austin law enforcement and demographics of certain zip-codes to find patterns of racial profiling.
+                    This way, we can tell whether you are more likely to get profiled in certain parts of town than others,
+                    based on your race.
                 </p>
-                <p>
-                    Our dataset...
-                </p>
-                <div class="g-chart"></div>
-                <div id="outer-container">
-                    <div id="viz-container">
-                        <div id="left-viz" class="chart"></div>
-                        <div id="right-viz" class="chart"></div>
-                    </div>
-                </div>    
-                <script src="percentage_bar_chart.js"></script>
             </div>
         </div>
         <div class="container content">
             <h3>
                 Traffic stops, visualized
             </h3>
-            Let's take a look at all traffic stops occured in each zip-area...
+            Let's take a look at all traffic stops occured in each zip-area. Below in the left pane is an interactive map of Austin.
+            The map is subdivided into zip-codes with colors indicating total number of stops in each area. Obviously, the
+            most interesting areas are the ones with higher stop frequencies, but feel free to check out the more "rural"
+            areas too. Clicking on a zip-area centers the selected area in the right pane. Here, each stop is visualized
+            with a dot. When an area is selected, the bar chart below changes accordingly, and shows the proportions of each
+            race stopped in the area. The colors on the bar chart indicates whether the officer on duty knew or didn't knew
+            the suspects race before stop. You can also hover above each bar to see excactly how many stops it accounts for.
+            Try it out!
+
+            <div id="outer-container">
+                <div id="viz-container">
+                    <div id="left-viz" class="chart"></div>
+                    <div id="right-viz" class="chart"></div>
+                </div>
+                <div class="g-chart"></div>
+            </div>
+            <script src="percentage_bar_chart.js"></script> Some interesting observations can be deducted from these visualizations:
+            <ul>
+                <li>In some areas, the distribtions of race are roughly equal between black, hispanics and whites.</li>
+                <li>In others such as <button class="updateZip" value="78703">78703</button>, more than 70% of all stops are of white people</li>
+                <li>Downtown areas such as 
+                    <button class="updateZip" value="78721">78721</button>, 
+                    <button class="updateZip" value="78702">78702</button> and
+                    <button class="updateZip" value="78723">78723</button> 
+                </li>
+                has a higher proportion of blacks stopped than the other areas.
+                <li>Suburban areas has fewer arrests than downtown, which isn't really surprising considering the higher traffic downtown.</li>
+            </ul>
         </div>
+
+
         <div class="container content">
             <h3>
                 Comparison: Does race really matter?
