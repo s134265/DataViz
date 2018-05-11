@@ -2,6 +2,7 @@
 let zipDataPath = '/data/zip_specific_stats.csv';
 let arrestsDataPath = './data/austin_arrests_2016.csv';
 let zipCodeAreasPath = './data/austin_area_zip_codes.geojson';
+let classDataPath = './data/2014_Housing_Market_Analysis_Data_by_Zip_Code_with_Classes.csv'
 
 var margin = { top: 60, right: 50, bottom: 35, left: 227 };
 var colors = { stops: "#973490", stopsKnown: "#E96A8D", stopsHover: "#B8428C", stopsKnownHover: "#EE8B97" };
@@ -27,6 +28,13 @@ var svg = d3.select(".g-chart").append("svg")
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var svgHeat = d3.select(".heatmap").append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
 // Map definitions
 let austinCenter = [-97.7431, 30.2672];
 
@@ -41,12 +49,20 @@ let detailProjection = d3.geoMercator()
   .center(austinCenter)
   .scale([40000]);
 
+let heatProjection = d3.geoMercator()
+  .translate([300, 250])
+  .center(austinCenter)
+  .scale([40000]);
+
 // Define path
 let path = d3.geoPath()
   .projection(projection);
 
 let detailPath = d3.geoPath()
   .projection(detailProjection);
+
+let heatPath = d3.geopath()
+  .projection(heatProjection)
 
 let map = d3.select('#left-viz')
   .append('svg')
@@ -59,6 +75,11 @@ let detailMap = d3.select('#right-viz')
   .attr('width', detailMapDims.w)
   .attr('height', detailMapDims.h)
   .attr('style', 'border: 1px solid black;');
+
+let heatMap = d3.select('#heat')
+  .append('svg1')
+  .attr('width', detailMapDims.w)
+  .attr('height', detailMapDims.h)
 
 //Title
 percentageBarChartTitle = svg.append('text')
@@ -742,4 +763,21 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       }
     });
   });
+  let classRowConverter = function (d) {
+    // Ignore observations with missing or otherwise falsey values
+    for (const v of Object.values(d)) {
+      if (!v) {
+        return;
+      }
+    }
+
+    return {
+      classValue: d.Class,
+      zipsCode: '' + parseInt(d.Zip_Code),
+    };
+  d3.csv(classDataPath, arrestsRowConverter, (err, arrests) => {
+    if (err) {
+      throw err;
+    }
+
 });
