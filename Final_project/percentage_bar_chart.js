@@ -13,6 +13,7 @@ var width = widther - margin.left - margin.right,
 
 let mapDims = { w: 700, h: 500 };
 let detailMapDims = { w: 700, h: 500 };
+let heatMapDims = { w: 700, h: 500 };
 
 var barHeight = height / 10;
 
@@ -30,7 +31,7 @@ var svg = d3.select(".g-chart").append("svg")
 
 var svgHeat = d3.select(".heatmap").append("svg")
   .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
+  .attr("height",  margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -61,7 +62,7 @@ let path = d3.geoPath()
 let detailPath = d3.geoPath()
   .projection(detailProjection);
 
-let heatPath = d3.geopath()
+let heatPath = d3.geoPath()
   .projection(heatProjection)
 
 let map = d3.select('#left-viz')
@@ -77,9 +78,9 @@ let detailMap = d3.select('#right-viz')
   .attr('style', 'border: 1px solid black;');
 
 let heatMap = d3.select('#heat')
-  .append('svg1')
-  .attr('width', detailMapDims.w)
-  .attr('height', detailMapDims.h)
+  .append('svg')
+  .attr('width', heatMapDims.w)
+  .attr('height', heatMapDims.h)
 
 //Title
 percentageBarChartTitle = svg.append('text')
@@ -758,23 +759,121 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .duration(100)
           .attr("fill", unHoverColor);
       }
+      let classRowConverter = function (d) {
+      // Ignore observations with missing or otherwise falsey values
+      for (const v of Object.values(d)) {
+        if (!v) {
+          return;
+        }
+    
+
+      return {
+        classValue: d.Class,
+        zipsCode: '' + parseInt(d.Zip_Code),
+          }
+        };
+      };
+      d3.csv(classDataPath, classRowConverter, (err, classes) => {
+        if (err) {
+          throw err;
+        }
+        console.log(classes)
+        const classZipCodes = classes.map(classes => classes.zipsCode);
+        const classCodeSet = new Set(classZipCodes);
+        
+        const classValues = classes.map(classes => classes.classValue);
+
+        let areas2 = areasFeatureCollection.features.filter((area) => {
+          return zipCodeSet.has(area.properties.zipcode);
+          });
+        
+        let areasclass = areasFeatureCollection.features.filter((area) => {
+          return classCodeSet.has(area.properties.zipcode);
+         });
+        
+        // Assign colors to areas
+        // let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
+        const maxClassValue = d3.max(classValues)
+        
+        for (let i = 0; i < areas2.length; i++) {
+          areas2[i].color = rgbToHex(0,0,0);
+        }
+
+        for (let i = 0; i < areasclass.length; i++) {
+          if (classValues[i] < 1) {
+            areasclass[i].color = rgbToHex(100,255,100);
+          } else {
+              r = Math.round(classValues[i]/maxClassValue*(255-100))+100
+              g = 255-Math.round(classValues[i]/maxClassValue*(255-100))
+              b = 100
+              areasclass[i].color = rgbToHex(r,g,b)
+          };
+        }
+
+        let areaPaths = heatMap.selectAll('path')
+          .data(areas2)
+          .enter()
+          .append('path')
+          .attr('d', heatPath)
+          .style('fill', d => d.color)
+
+        let areaPath2 = heatMap.selectAll('path')
+          .data(areasclass)
+          .enter()
+          .append('path')
+          .attr('d', heatPath)
+          .style('fill', d => d.color)
+
+        function handleMouseOver(d, i) {
+          var hoverColor;
+          var hoverText;
+
+          if (d.race.includes("Known")) {
+            hoverColor = colors.stopsKnownHover;
+            hoverText = row['' + d.race];
+           }
+          else {
+            hoverColor = colors.stopsHover;
+            hoverText = row['' + d.race + ''] - row['' + d.race + 'isRaceKnown'];
+          }
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .attr("fill", hoverColor);
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+          div.html(hoverText + " stops")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+
+        /*detailMap.selectAll('circle')
+          .attr('fill', function(d){
+            console.log(d.arrestee.race);
+            return 'black';})*/
+      }
+
+      function handleMouseOut(d, i) {
+        var hoverColor;
+        var hoverText;
+        if (d.race.includes("Known")) {
+          unHoverColor = colors.stopsKnown;
+        }
+        else {
+          unHoverColor = colors.stops;
+        }
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);
+        d3.select(this)
+          .transition()
+          .duration(100)
+          .attr("fill", unHoverColor);
+      }
+
+      });
     });
   });
-  let classRowConverter = function (d) {
-    // Ignore observations with missing or otherwise falsey values
-    for (const v of Object.values(d)) {
-      if (!v) {
-        return;
-      }
-    }
 
-    return {
-      classValue: d.Class,
-      zipsCode: '' + parseInt(d.Zip_Code),
-    };
-  d3.csv(classDataPath, arrestsRowConverter, (err, arrests) => {
-    if (err) {
-      throw err;
-    }
 
 });
