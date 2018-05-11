@@ -99,8 +99,13 @@ legendCircles = svg.selectAll('.legendCircles')
   .attr('r', 4)
   .attr('fill', function (d, i) {
     var color;
-    if (i == 0) { color = colors['stops'] }
-    else { color = colors['stopsknown'] }
+    if (i == 0) {
+      color = colors.stops;
+    }
+    else { 
+      color = colors.stopsKnown; 
+    }
+    
     return (color);
   })
 
@@ -187,14 +192,6 @@ let rowExtractor = function (zipToFind, zips) {
     if (zips[i].zip == zipToFind) {
       rowIndex = i
     }
-  }
-  var options = zipList;
-  for (var i = 0; i < options.length; i++) {
-    var opt = options[i];
-    var el = document.createElement("option");
-    el.textContent = opt;
-    el.value = opt;
-    select.appendChild(el);
   }
   return rowIndex;
 }

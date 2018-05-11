@@ -40,15 +40,69 @@
                     </h1>
                     To begin the data visualization journey, check out our video:
                     <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/IPvrjCuwke8" frameborder="0" allow="autoplay; encrypted-media"
-                            allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/IPvrjCuwke8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                 </p>
                 <p>
                     <h2>Motivation</h2>
+                    Being accused or suspected on the basis of race, ethnicity or religion is neither fun nor legal. Unfortunately, the practice
+                    of
+                    <a href="https://www.aclu.org/other/racial-profiling-definition" title="racial profiling: definition">racial profiling</a> has been an increasingly popular term in the U.S. In 2015,
+                    <a href="http://www.kxan.com/news/local/austin/austin-police-monitor-wants-more-done-to-prevent-racial-profiling_20180227105309592/994782265">1,134 people in Austin, TX</a> filed complaints related to racial profiling by local enforcement. And the problems persists; in 2017
+                    <a href="https://www.huffingtonpost.com/entry/texas-gives-a-green-light-to-racial-profiling_us_59509915e4b0c85b96c65ac5">The state of Texas</a> passed a bill, commanding all police officers to search anyone who "looks like
+                    an immigrant". In this project we examine relationships between geographic occurences of traffic stops
+                    by Austin law enforcement and demographics of certain zip-codes to find patterns of racial profiling.
+                    This way, we can tell whether you are more likely to get pulled over in certain parts of town than others,
+                    based on your race.
                     <h3>What are our datasets?</h3>
+                    As a response to the public outcry, the city of Austin yearly releases
+                    <a href="https://catalog.data.gov/dataset/2016-racial-profiling-dataset-arrests">
+                        data for motor vehicle stops that results in a citation or arrest</a>. The 2016 data includes 9185
+                    stops, and information about factors such as location, race time, etc. The three most important attributes
+                    are described below:
+                    <p>
+                        <table style="width: 100%">
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td> APD_RACE_DESC</td>
+                                <td> Race of suspect</td>
+                            </tr>
+                            <tr>
+                                <td> RACE_KNOWN</td>
+                                <td> Was race known by officer before stop?</td>
+                            </tr>
+                            <tr>
+                                <td> X_COORDINATE, Y_COORDINATE</td>
+                                <td> Coordinates for stop location in
+                                    <a href="https://en.wikipedia.org/wiki/State_Plane_Coordinate_System">State Plane Coordinate System</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </p>
+                    To compare the traffic stop data with demographics for a given area, we use the
+                    <a href="https://catalog.data.gov/dataset/2014-housing-market-analysis-data-by-zip-code">
+                        2014 Housing Market Analysis Data by Zip Code</a>, also for Austin.
+
+                    <b>JAKOB SKRIV OM HOUSING DATA SET HER!</b>
+
                     <h3>Why we chose the datasets</h3>
+                    <p>
+                        These two datasets combined gives an overall impression of where the majority of arrest in Austin takes place, and perhaps
+                        why. Demographics is an important factor when analyzing crime data, but can also tell whether there
+                        are discrepancies in the number of arrest of specific races in the area. Since both datasets can
+                        be directly coded to zip-codes of Austin, they may assist each other.
+                    </p>
                     <h3>What is the goal for the end user's experience? </h3>
+                    <p> The user should follow the narrative from the introductory exploratory data visualizations to the conclusion
+                        and its corresponding explanatory visualization. By making our visualizations interactive, we hope
+                        to encourage the user to explore the data and come to his or her own conclusions. The user should
+                        find it easy and accessible to explore the data and get the information he or her needs. Furthermore,
+                        this information should be presented in a credible manner, and give valuable insights. After going
+                        through our visualizations, the user should feel more knowledgeable about racial profiling incidents
+                        in Austin, which races are especially exposed, and where most incidents occur.</p>
                     <h2>Basic stats</h2>
                     <h3>Write about choices in data cleaning and preprocessing</h3>
                     <h3>Dataset stats</h3>
@@ -59,15 +113,23 @@
                     <h3>Tools of narrative structure</h3>
                     Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?
                     <h2>Visualizations</h2>
-                    Explain the visualizations you’ve chosen.
-                    Why are they right for the story you want to tell?
+                    Explain the visualizations you’ve chosen. Why are they right for the story you want to tell?
                     <h2>Discussion</h2>
-                    Think critically about your creation
-                    What went well?,
-                    What is still missing? What could be improved?, Why?
+                    Think critically about your creation What went well?, What is still missing? What could be improved?, Why?
                     <h2>Contributions</h2>
-                    You should write (just briefly) which group member was the main responsible for which elements of the assignment. (I want you guys to understand every part of the assignment, but usually there is someone who took lead role on certain portions of the work. That’s what you should explain).
-                    
+                    <p>
+                        <b>Sebastian Frelle Koch:</b> Interactive map of Austin and detailed map for each zip-code with data points.
+                    </p>
+                    <p>
+                        <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates to Lat/Lon, PCA and SVM decision boundary analysis.
+                    </p>
+                    <p>
+                        <b>Elias Lundgaard Pedersen:</b> Page set-up, interactive bar chart connected to the map and the explainer page.
+                    </p>
+                    You should write (just briefly) which group member was the main responsible for which elements of the assignment. (I want
+                    you guys to understand every part of the assignment, but usually there is someone who took lead role
+                    on certain portions of the work. That’s what you should explain).
+
                 </p>
             </div>
         </div>
