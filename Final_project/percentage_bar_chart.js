@@ -86,7 +86,7 @@ percentageBarChartTitle = svg.append('text')
   .attr("x", (width / 2))
   .attr("y", -margin.top / 1.3)
   .attr("text-anchor", "middle")
-  .text("Percentage of stops by race for selected zip-code")
+  .text("Percentage of stops by race for selected zip-code: " + zipToBeLoaded)
   .attr('class', 'title');
 console.log(percentageBarChartTitle);
 
@@ -123,10 +123,10 @@ legendCircles = svg.selectAll('.legendCircles')
     if (i == 0) {
       color = colors.stops;
     }
-    else { 
-      color = colors.stopsKnown; 
+    else {
+      color = colors.stopsKnown;
     }
-    
+
     return (color);
   })
 
@@ -177,22 +177,6 @@ let rowConverter = function (d) {
     american_indian_alaskan_nativeisRaceKnown: parseInt(d.AMERICAN_INDIAN_ALASKAN_NATIVEisRaceKnown)
   };
 };
-//Chart headline (question)
-var headline = "Nevada Republican Caucuses"
-
-//Chart state description
-var stateDescription = "Most Important Quality"
-
-//Timestamp text
-var timestampText = "EXIT POLL LATEST AS OF "
-
-//Timestamp time
-var timestampTime = "9:05 PM ET"
-//Appends chart headline
-d3.select(".g-hed").text(headline);
-
-//Appends chart intro text
-d3.select(".g-intro").text(stateDescription);
 
 //Appends the y axis
 var yAxisGroup = svg.append("g")
@@ -395,16 +379,6 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         .attr('y', height + margin.bottom / 1.1)
         .attr('class', 'totalStopsLabel');
 
-      //Appends timestamp text  
-      d3.select(".g-source-reg")
-        .text(timestampText)
-        .attr("class", "g-source-reg");
-
-      //Appends timestamp time
-      d3.select(".g-source-bold")
-        .text(timestampTime)
-        .attr("class", "g-source-bold");
-
       resized();
 
       //On updated zip values
@@ -443,6 +417,8 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
 
         //Defines the xScale max
         xScale.domain([0, maxX]);
+
+
         //Join data
         var bars = svg.selectAll(".bar")
           .data(dataStops);
@@ -571,7 +547,10 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           d.num = +d.num;
           d.num2 = +d.num2;
         });
-
+        //Update title
+        percentageBarChartTitle = svg.selectAll('.title')
+          .text("Percentage of stops by race for selected zip-code: " + zipCode)
+          .attr('class', 'title');
         updatePercentageBarChart();
       };
 
@@ -720,6 +699,19 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         xAxis
           .scale(xScale)
       };
+
+      d3.selectAll(".updateZip").on("click", function(){
+        zipToUpdate = this.value;
+        var result = areas.filter(function( obj ) {
+          
+          return obj.properties.zipcode == zipToUpdate;
+        });
+        
+        
+        redrawDetailView(result[0]);
+        updateBarChart(this.value);
+        
+      });
       function handleMouseOver(d, i) {
         var hoverColor;
         var hoverText;
@@ -742,6 +734,11 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         div.html(hoverText + " stops")
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY - 28) + "px");
+
+        /*detailMap.selectAll('circle')
+          .attr('fill', function(d){
+            console.log(d.arrestee.race);
+            return 'black';})*/
       }
 
       function handleMouseOut(d, i) {
