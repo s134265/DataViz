@@ -84,9 +84,7 @@
                     </p>
                     To compare the traffic stop data with demographics for a given area, we use the
                     <a href="https://catalog.data.gov/dataset/2014-housing-market-analysis-data-by-zip-code">
-                        2014 Housing Market Analysis Data by Zip Code</a>, also for Austin.
-
-                    <b>JAKOB SKRIV OM HOUSING DATA SET HER!</b>
+                        2014 Housing Market Analysis Data by Zip Code</a>, also for Austin. The housing market data contains a lot of socio-econmic factors (disability ratio, ratio below poverty level, unemployment rate etc.) and ethnical distribution per zip code of 32 zip codes (and therefore not all).
 
                     <h3>Why we chose the datasets</h3>
                     <p>
@@ -105,6 +103,42 @@
                         in Austin, which races are especially exposed, and where incidents are most likely to occur.</p>
                     <h2>Basic stats</h2>
                     <h3>Write about choices in data cleaning and preprocessing</h3>
+                    <p>The State Plane Coordinates had to be converted through finding their FIBS code, converting lengths into correct measures (american yards uuugh) and then preprocess in Python through a Google maps API to convert every observation to Lat/Lon. <br/> 
+                    The race index had to be made as well by counting observations by zip code in whites and non whites to extract how their distributions compared to the total arrested in the zip code was. <br/> 
+                    The principal component analysis of the housing data had the following structure (all other features are omitted due to low weightings):
+                    <p>
+                        <table style="width: 100%">
+                            <tr>
+                                <th>Population below poverty level</th>
+                                <th>Median household income</th>
+                                <th>Unemployment rate</th>
+                              <th>Large households proportion (5+ members)</th>
+                                <th>Median rent</th>
+                              <th>Median home value</th>
+                                <th>Average monthly transportation cost</th>  
+                            </tr>
+                            <tr>
+
+                           <td> 0.396 </td>
+                           <td> -0.466 </td>
+                           <td>  0.429 </td>
+                           <td> 0.293 </td>
+                           <td> -0.332 </td>
+                           <td> -0.421 </td>
+                           <td> -0.039 </td>
+                       </tr>
+                       <tr>
+                        <td> 0.250 </td>
+                        <td> -0.175 </td>
+                        <td>  0.108 </td>
+                        <td> -0.525 </td>
+                        <td>  0.146 </td>
+                        <td>  0.214 </td>
+                        <td> -0.729 </td>
+                    </tr>
+                </table>
+               </p>
+
                     <h3>Dataset stats</h3>
                     Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.
                     <h2>Genre</h2>
@@ -121,7 +155,7 @@
                         <b>Sebastian Frelle Koch:</b> Interactive map of Austin and detailed map for each zip-code with data points.
                     </p>
                     <p>
-                        <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates to Lat/Lon, PCA and SVM decision boundary analysis.
+                        <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates to Lat/Lon, PCA and SVM decision boundary analysis. Heatmap of austin with race index.
                     </p>
                     <p>
                         <b>Elias Lundgaard Pedersen:</b> Page set-up, interactive bar chart connected to the map and the explainer page.

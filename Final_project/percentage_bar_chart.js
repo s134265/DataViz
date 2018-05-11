@@ -30,7 +30,7 @@ var svg = d3.select(".g-chart").append("svg")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var svgHeat = d3.select(".heatmap").append("svg")
-  .attr("width", width + margin.left + margin.right)
+ .attr("width", width + margin.left + margin.right)
   .attr("height",  margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -784,12 +784,12 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         const classCodeSet = new Set(classZipCodes);
         const classValues = classes.map(classes => classes.classValue);
 
-        let areas2 = areasFeatureCollection.features.filter((area) => {
-          return zipCodeSet2.has(area.properties.zipcode);
+        let areas2 = areasFeatureCollection.features.filter((area1) => {
+          return zipCodeSet2.has(area1.properties.zipcode);
           });
         
-        let areasclass = areasFeatureCollection.features.filter((area) => {
-          return classCodeSet.has(area.properties.zipcode);
+        let areasclass = areasFeatureCollection.features.filter((area2) => {
+          return classCodeSet.has(area2.properties.zipcode);
          });
 
 
@@ -828,14 +828,7 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           areasclass[i].label = 'The racial index for this zip code is ' + classValues[i] 
         }
         
-        var tooltip = d3.select("body")
-          .append("div")
-          .style("position", "absolute")
-          .style("z-index", "10")
-          .style("visibility", "hidden")
-          .text("a simple tooltip");
 
-        d3.select()
 
         let areaPaths = heatMap.selectAll('path')
           .data(areas2)

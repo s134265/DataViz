@@ -75,7 +75,7 @@
                 </div>
                 <div class="g-chart"></div>
             </div>
-            Some interesting observations can be deducted from these visualizations:
+             Some interesting observations can be deducted from these visualizations:
             <ul>
                 <li>In some areas, the distribtions of race are roughly equal between black, hispanics and whites.</li>
                 <li>In others such as <button class="updateZip" value="78703">78703</button>, more than 70% of all stops are of white people</li>
@@ -93,9 +93,20 @@
 
         <div class="container content">
             <h3>
-                Comparison: Does race really matter?
+                Analysis: Does Race Really Matter?
             </h3>
-            Bar chart comparing stuff
+            To do no analysis whether or not race actually mattered in trafic stops, we generated a <b>race index</b>: <img src="race-index.svg">
+            The race index goes over 1 when more non whites are getting arrested in a zip code compared to how many non whites that are living there and the same for whites when it is under 1.
+            We would like to investigate whether this index can be predicted by socio-economic factors, since it can be an explanation for some of the misalignment.
+            <br/>
+            We have chosen to turn this given problem into a classifcation problem (race index > 1 and race index < 1 as classes), and since this problem is influenced by a lot of factors, a non-linear classifier seems the most adequite. The classifcation method separating the classes beautifully is called <a href=https://en.wikipedia.org/wiki/Support_vector_machine>Support Vector Machine (SVM)</a> Classifcation, where a chosen kernel (as KDE) is used for constructing a non-linear hyperlane for separation. In this case, the kernel is the gaussian radial basis function.  <br/>
+            Since the supplementary housing data is rather complex in its dimensionality, a <a href=https://en.wikipedia.org/wiki/Principal_component_analysis>Principal Component Analysis</a> is made to reduce the dimensionality down to 2D whilst keeping the most information explained by variance possible. The two prinipal axes are a linear combination of the original data, and the first axis in particular has a very interesting behavior: <br />
+            Low median income, low median house value, high unemployment rate and high population below the poverty level constitues in a high value on the axis, and virsa versa for a low value. <b> Thus, the higher the first principal component the lower socio-economic status for the zip code. </b> <br/>
+            Now to the figure!
+            <img src="SVM.svg">
+            Red observations (race index > 1) are not that dense, and spread all over the domain. Thus, predicting the racial index increase cannot be immediatly predicted from socio-economic factors. However, blue observations (race index < 1) are very dense with a relatively high first principal compenent. Thus, whites being racially discriminated against by the APD cannot be concluded from this data, or at least directly, since socio-economic status has a large effect. 
+
+
         </div>
         <div class="container content">
             <h3>
@@ -120,6 +131,6 @@
                 </ul>
             </div>
         </div>
-        <script src="percentage_bar_chart.js"></script> 
+        <script src="percentage_bar_chart.js"></script>
     </div>
 </body>
