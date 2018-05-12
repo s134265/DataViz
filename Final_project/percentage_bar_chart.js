@@ -648,7 +648,13 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       };
 
       resetDetailDataPoints();
-
+      var result = areas.filter(function( obj ) {
+          
+        return obj.properties.zipcode == zipToBeLoaded;
+      });
+      
+      
+      redrawDetailView(result[0]);
 
       function resized() {
         //new margin

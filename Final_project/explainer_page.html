@@ -37,8 +37,9 @@
                 <p>
                     <h1 id="part1" class="post-title">
                         Explainer page
-                    </h1> This is the explain page for the <a href="/" title="Home">Final Project</a> of 02806 Social Data Analysis and visualization.
-                    To begin the data visualization journey, check out our video:
+                    </h1> This is the explain page for the
+                    <a href="/" title="Home">Final Project</a> of 02806 Social Data Analysis and visualization. To begin the data visualization journey,
+                    check out our video:
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/IPvrjCuwke8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
@@ -48,7 +49,8 @@
                     Being accused or suspected on the basis of race, ethnicity or religion is neither fun nor legal. Unfortunately, the practice
                     of
                     <a href="https://www.aclu.org/other/racial-profiling-definition" title="racial profiling: definition">racial profiling</a> has been an increasingly popular term in the U.S. In 2015,
-                    <a href="http://www.kxan.com/news/local/austin/austin-police-monitor-wants-more-done-to-prevent-racial-profiling_20180227105309592/994782265">1,134 people in Austin, TX</a> filed complaints related to racial profiling by local enforcement. And the problems persists; in 2017
+                    <a href="http://www.kxan.com/news/local/austin/austin-police-monitor-wants-more-done-to-prevent-racial-profiling_20180227105309592/994782265">1,134 people in Austin, TX</a> filed complaints related to racial profiling by local enforcement. And
+                    the problems persists; in 2017
                     <a href="https://www.huffingtonpost.com/entry/texas-gives-a-green-light-to-racial-profiling_us_59509915e4b0c85b96c65ac5">The state of Texas</a> passed a bill, commanding all police officers to search anyone who "looks like
                     an immigrant". In this project we examine relationships between geographic occurences of traffic stops
                     by Austin law enforcement and demographics of certain zip-codes to find patterns of racial profiling.
@@ -84,7 +86,9 @@
                     </p>
                     To compare the traffic stop data with demographics for a given area, we use the
                     <a href="https://catalog.data.gov/dataset/2014-housing-market-analysis-data-by-zip-code">
-                        2014 Housing Market Analysis Data by Zip Code</a>, also for Austin. The housing market data contains a lot of socio-econmic factors (disability ratio, ratio below poverty level, unemployment rate etc.) and ethnical distribution per zip code of 32 zip codes (and therefore not all).
+                        2014 Housing Market Analysis Data by Zip Code</a>, also for Austin. The housing market data contains
+                    a lot of socio-econmic factors (disability ratio, ratio below poverty level, unemployment rate etc.)
+                    and ethnical distribution per zip code of 32 zip codes (and therefore not all).
 
                     <h3>Why we chose the datasets</h3>
                     <p>
@@ -103,68 +107,87 @@
                         in Austin, which races are especially exposed, and where incidents are most likely to occur.</p>
                     <h2>Basic stats</h2>
                     <h3>Write about choices in data cleaning and preprocessing</h3>
-                    <p>The State Plane Coordinates had to be converted through finding their FIBS code, converting lengths into correct measures (american yards uuugh) and then preprocess in Python through a Google maps API to convert every observation to Lat/Lon. <br/> 
-                    The race index had to be made as well by counting observations by zip code in whites and non whites to extract how their distributions compared to the total arrested in the zip code was. <br/> 
-                    The principal component analysis of the housing data had the following structure (all other features are omitted due to low weightings):
-                    <p>
-                        <table style="width: 100%">
-                            <tr>
-                                <th>Population below poverty level</th>
-                                <th>Median household income</th>
-                                <th>Unemployment rate</th>
-                              <th>Large households proportion (5+ members)</th>
-                                <th>Median rent</th>
-                              <th>Median home value</th>
-                                <th>Average monthly transportation cost</th>  
-                            </tr>
-                            <tr>
+                    <p>The State Plane Coordinates had to be converted through finding their FIBS code, converting lengths into
+                        correct measures (american yards uuugh) and then preprocess in Python through a Google maps API to
+                        convert every observation to Lat/Lon.
+                        <br/> The race index had to be made as well by counting observations by zip code in whites and non whites
+                        to extract how their distributions compared to the total arrested in the zip code was.
+                        <br/> The principal component analysis of the housing data had the following structure (all other features
+                        are omitted due to low weightings):
+                        <p>
+                            <table style="width: 100%">
+                                <tr>
+                                    <th>Population below poverty level</th>
+                                    <th>Median household income</th>
+                                    <th>Unemployment rate</th>
+                                    <th>Large households proportion (5+ members)</th>
+                                    <th>Median rent</th>
+                                    <th>Median home value</th>
+                                    <th>Average monthly transportation cost</th>
+                                </tr>
+                                <tr>
 
-                           <td> 0.396 </td>
-                           <td> -0.466 </td>
-                           <td>  0.429 </td>
-                           <td> 0.293 </td>
-                           <td> -0.332 </td>
-                           <td> -0.421 </td>
-                           <td> -0.039 </td>
-                       </tr>
-                       <tr>
-                        <td> 0.250 </td>
-                        <td> -0.175 </td>
-                        <td>  0.108 </td>
-                        <td> -0.525 </td>
-                        <td>  0.146 </td>
-                        <td>  0.214 </td>
-                        <td> -0.729 </td>
-                    </tr>
-                </table>
-               </p>
+                                    <td> 0.396 </td>
+                                    <td> -0.466 </td>
+                                    <td> 0.429 </td>
+                                    <td> 0.293 </td>
+                                    <td> -0.332 </td>
+                                    <td> -0.421 </td>
+                                    <td> -0.039 </td>
+                                </tr>
+                                <tr>
+                                    <td> 0.250 </td>
+                                    <td> -0.175 </td>
+                                    <td> 0.108 </td>
+                                    <td> -0.525 </td>
+                                    <td> 0.146 </td>
+                                    <td> 0.214 </td>
+                                    <td> -0.729 </td>
+                                </tr>
+                            </table>
+                        </p>
 
-                    <h3>Dataset stats</h3>
-                    Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.
-                    <h2>Genre</h2>
-                    <h3>Tools of visual narrative</h3>
-                    Which tools did you use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?
-                    <h3>Tools of narrative structure</h3>
-                    Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?
-                    <h2>Visualizations</h2>
-                    Explain the visualizations you’ve chosen. Why are they right for the story you want to tell?
-                    <h2>Discussion</h2>
-                    Think critically about your creation What went well?, What is still missing? What could be improved?, Why?
-                    <h2>Contributions</h2>
-                    <p>
-                        <b>Sebastian Frelle Koch:</b> Interactive map of Austin and detailed map for each zip-code with data points.
-                    </p>
-                    <p>
-                        <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates to Lat/Lon, PCA and SVM decision boundary analysis. Heatmap of austin with race index.
-                    </p>
-                    <p>
-                        <b>Elias Lundgaard Pedersen:</b> Page set-up, interactive bar chart connected to the map and the explainer page.
-                    </p>
-                    You should write (just briefly) which group member was the main responsible for which elements of the assignment. (I want
-                    you guys to understand every part of the assignment, but usually there is someone who took lead role
-                    on certain portions of the work. That’s what you should explain).
+                        <h3>Dataset stats</h3>
+                        Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.
+                        <h2>Genre</h2>
+                        <h3>Tools of visual narrative</h3>
+                        Which tools did you use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?
+                        <h3>Tools of narrative structure</h3>
+                        Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?
+                        <h2>Visualizations</h2>
+                        Explain the visualizations you’ve chosen. Why are they right for the story you want to tell?
+                        <h2>Discussion</h2>
+                        Analysing racial profiling from traffic stops has proved a challenging task. Our data paired traffic stops with socio-economical
+                        factors, but our analysis was inconclusive. This is probably due to the nature of traffic; densely
+                        populated roads in urban areas are likely trafficked by people living in other parts of town.  <b>JAKOB SKRIV NOGET OM ANALYSEN HER</b>
+                        <p>Unfortunately,
+                        many zipcodes in Austin only had few registered traffic stops (
+                        <20). This leads to skewed distributions of race, and we therefore had to leave out large parts of town. Another time, we
+                            should look to combine data for more years to get more data. When we started analyzing the data,
+                            we were worried that 45 zipcodes would be too small for the user to click. This proved not to be
+                            a problem, however, due to the missing data in large areas of town, we could have attempted to combine
+                            said zipcodes into larger sections. Since we couldn 't find any socio-economic data for Austin from 2016, 
+                            we had to use the data from 2014. In those two years, gentrification could have changed the factors for some 
+                            zipcodes, possibly making our analysis invalid. It is however unlikely for such large changes to happen in two years.
+                            Overall, our data tells a story of socio-economic inequality in denser populated cities, but fails to actually find racial profiling from the data alone.</p>
+                             <h2>Contributions</h2>
+                            <p>
+                                <b>Sebastian Frelle Koch:</b> Interactive map of Austin and detailed map for each zip-code with
+                                data points.
+                            </p>
+                            <p>
+                                <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates
+                                to Lat/Lon, PCA and SVM decision boundary analysis. Heatmap of austin with race index.
+                            </p>
+                            <p>
+                                <b>Elias Lundgaard Pedersen:</b> Page set-up, interactive bar chart connected to the map and
+                                the explainer page.
+                            </p>
+                            You should write (just briefly) which group member was the main responsible for which elements of the assignment. (I want
+                            you guys to understand every part of the assignment, but usually there is someone who took lead
+                            role on certain portions of the work. That’s what you should explain).
 
-                </p>
+                    </p>
             </div>
         </div>
         <div class="container content">
