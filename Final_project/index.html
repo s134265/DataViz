@@ -35,9 +35,9 @@
             <div class="post">
                 <p>
                     <h1 id="part1" class="post-title">
-                        Racial profiling in Austin
+                        Racial Profiling in Austin
                     </h1>
-                    <h2>Or: Where to drive in Austin if you're not white</h2>
+                    <h2>Or: Where to Drive in Austin if You Are not White</h2>
                 </p>
             </div>
             <div class="post">
@@ -57,7 +57,7 @@
         </div>
         <div class="container content">
             <h3>
-                Traffic stops, visualized
+                Traffic Stops Visualized
             </h3>
             Let's take a look at all traffic stops occured in each zip-area. Below in the left pane is an interactive map of Austin.
             The map is subdivided into zip-codes with colors indicating total number of stops in each area. Obviously, the
@@ -95,24 +95,24 @@
             <h3>
                 Analysis: Does Race Really Matter?
             </h3>
-            To do no analysis whether or not race actually mattered in trafic stops, we generated a <b>race index</b>: <img src="race-index.svg">
-            The race index goes over 1 when more non whites are getting arrested in a zip code compared to how many non whites that are living there and the same for whites when it is under 1.
+            To do no analysis whether or not race actually mattered in trafic stops, we generated a <b>racial profiling index</b>: <img src="race-index.svg">
+            The racial profiling index goes over 1 when more non whites are getting arrested in a zip code compared to how many non whites that are living there and the same for whites when it is under 1.
             We would like to investigate whether this index can be predicted by socio-economic factors, since it can be an explanation for some of the misalignment.
             <br/>
-            We have chosen to turn this given problem into a classifcation problem (race index > 1 and race index < 1 as classes), and since this problem is influenced by a lot of factors, a non-linear classifier seems the most adequite. The classifcation method separating the classes beautifully is called <a href=https://en.wikipedia.org/wiki/Support_vector_machine>Support Vector Machine (SVM)</a> Classifcation, where a chosen kernel (as KDE) is used for constructing a non-linear hyperlane for separation. In this case, the kernel is the gaussian radial basis function.  <br/>
+            We have chosen to turn this given problem into a classifcation problem (racial profiling index > 1 and racial profiling index < 1 as classes), and since this problem is influenced by a lot of factors, a non-linear classifier seems the most adequite. The classifcation method separating the classes beautifully is called <a href=https://en.wikipedia.org/wiki/Support_vector_machine>Support Vector Machine (SVM)</a> Classifcation, where a chosen kernel (as KDE) is used for constructing a non-linear hyperlane for separation. In this case, the kernel is the gaussian radial basis function.  <br/>
             Since the supplementary housing data is rather complex in its dimensionality, a <a href=https://en.wikipedia.org/wiki/Principal_component_analysis>Principal Component Analysis</a> is made to reduce the dimensionality down to 2D whilst keeping the most information explained by variance possible. The two prinipal axes are a linear combination of the original data, and the first axis in particular has a very interesting behavior: <br />
             Low median income, low median house value, high unemployment rate and high population below the poverty level constitues in a high value on the axis, and virsa versa for a low value. <b> Thus, the higher the first principal component the lower socio-economic status for the zip code. </b> <br/>
             Now to the figure!
             <img src="SVM.svg">
-            Red observations (race index > 1) are not that dense, and spread all over the domain. Thus, predicting the racial index increase cannot be immediatly predicted from socio-economic factors. However, blue observations (race index < 1) are very dense with a relatively high first principal compenent. Thus, whites being racially discriminated against by the APD cannot be concluded from this data, or at least directly, since socio-economic status has a large effect. 
+            Red observations (racial profiling index > 1) are not that dense, and spread all over the domain. Thus, predicting the racial profiling index increase cannot be immediatly predicted from socio-economic factors. However, blue observations (racial profiling index < 1) are very dense with a relatively high first principal compenent. Thus, whites being racially discriminated against by the APD cannot be concluded from this data, or at least directly, since socio-economic status has a large effect. 
 
 
         </div>
         <div class="container content">
             <h3>
-                Where you shouldn't go
+                Where You Should Avoid Going
             </h3>
-            Prediction and analysis
+            Coming from the analysis, we cannot give any recommendation for caucassians, but if you are not white, you should avoid driving in the zones showing dangerously red! This warning map of Austin should give you an intuitive feel of where to drive and where not to drive (unless the index is not available, then it is pretty much a gamble). Sadly this includes central Austin, but hey at least you can avoid the insane traffic! Try mousing over the zip codes to get feel of the racial profiling!
             <div id="heat" class="heatmap"></div>
 
         </div>

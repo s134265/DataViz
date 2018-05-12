@@ -146,9 +146,25 @@
                                 </tr>
                             </table>
                         </p>
+                        Some zip codes only had few stops (less than 10) as well as missing data for the zip code in the housing market dataset. These were removed in Python as well when generating the new .csv files. 
 
                         <h3>Dataset stats</h3>
-                        Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.
+                        The arrest dataset clearly showed the linear structure of roads in the US as seen below:
+                        <img src="Roads-linear.png"; style='height: 50%; width: 50%; object-fit: contain'>
+                        There was 7 (6 and unknown) races found in the dataset where frequencies shows a dominance in Hispanics, Whites and Blacks, which is quite reasonable for Texas: <br/>
+                        <b>HISPANIC OR LATINO: 3435<br/>
+                        WHITE: 3417<br/>
+                        BLACK: 2152<br/>
+                        ASIAN: 93<br/>
+                        UNKNOWN: 42<br/>
+                        MIDDLE EASTERN: 35<br/>
+                        HAWAIIAN/PACIFIC ISLANDER: 5<br/>
+                        AMERICAN INDIAN/ALASKAN NATIVE: 5<br/> </b><br/>
+
+                        One of the tendencies in the housing market data was that classification problem was not linear. We tried a logistic regression with the following output:
+                        <img src="Linear-data.png">
+                        This clearly show horrible linear tendencies, which is why we ended up with a highly non-linear classifier.
+
                         <h2>Genre</h2>
                         <h3>Tools of visual narrative</h3> To begin the visual structure, an
                         <b>establishing shot</b> presents the map for the user, with a
@@ -179,12 +195,10 @@
                         <h2>Visualizations</h2>
                         Explain the visualizations you’ve chosen. Why are they right for the story you want to tell?
                         <h2>Discussion</h2>
-                        Analysing racial profiling from traffic stops has proved a challenging task. Our data paired traffic stops with socio-economical
-                        factors, but our analysis was inconclusive. This is probably due to the nature of traffic; densely
-                        populated roads in urban areas are likely trafficked by people living in other parts of town.
-                        <b>JAKOB SKRIV NOGET OM ANALYSEN HER</b>
-                        <p>Unfortunately, many zipcodes in Austin only had few registered traffic stops (
-                            <20). This leads to skewed distributions of race, and we therefore had to leave out large parts of town. Another time, we
+                        White dominated arrests seems to be influenced by socio-economic factors, which is quite common. Due to our lack of preacquired knowledge, the data was not transformed to take care of this, which could have given the conclusion an even stronger basis. Luckily, non-white arrests where not that dependent on socio-economic factors, so our assumptions on traditional racial profiling still stands.
+                        The racial profiling index is only our own idea, and with more time a proper social science index could have been chosen with aspect to scientific articles. With more time, a transformation of the data to handle socio-economic factors could be done as well.
+                        
+                        <p>Unfortunately, many zipcodes in Austin only had few registered traffic stops (less than 10). This leads to skewed distributions of race, and we therefore had to leave out large parts of town. Another time, we
                                 should look to combine data for more years to get more data. When we started analyzing the data,
                                 we were worried that 45 zipcodes would be too small for the user to click. This proved not to
                                 be a problem, however, due to the missing data in large areas of town, we could have attempted
