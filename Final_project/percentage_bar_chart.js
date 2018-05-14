@@ -34,8 +34,8 @@ var svg = d3.select(".g-chart").append("svg")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var svgHeat = d3.select(".heatmap").append("svg")
- .attr("width", width + margin.left + margin.right)
-  .attr("height",  margin.top + margin.bottom)
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -270,22 +270,22 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       let areas = areasFeatureCollection.features.filter((area) => {
         return zipCodeSet.has(area.properties.zipcode);
       });
-      
+
       function rgbToHex(r, g, b) {
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
       }
       let classRowConverter = function (d) {
-      // Ignore observations with missing or otherwise falsey values
-      	for (const v of Object.values(d)) {
-        	if (!v) {
-          		return;
-        	}
-    
+        // Ignore observations with missing or otherwise falsey values
+        for (const v of Object.values(d)) {
+          if (!v) {
+            return;
+          }
 
-      		return {
-        		classValue: d.Class,
-        		zipsCode: '' + parseInt(d.Zip_Code),
-          	}
+
+          return {
+            classValue: d.Class,
+            zipsCode: '' + parseInt(d.Zip_Code),
+          }
         };
       };
       d3.csv(classDataPath, classRowConverter, (err, classes) => {
@@ -298,15 +298,15 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         const classCodeSet = new Set(classZipCodes);
         const classValues = classes.map(classes => classes.classValue);
         //Copy array to not conflict with other maps
-        let areasFeatureCollectionCopy = {"type": "FeatureCollection", features: []}
+        let areasFeatureCollectionCopy = { "type": "FeatureCollection", features: [] }
         for (let i = 0; i < areasFeatureCollection.features.length; ++i) {
-   			areasFeatureCollectionCopy.features[i] = {"type": "Feature", geometry: areasFeatureCollection.features[i].geometry, properties: areasFeatureCollection.features[i].properties};
+          areasFeatureCollectionCopy.features[i] = { "type": "Feature", geometry: areasFeatureCollection.features[i].geometry, properties: areasFeatureCollection.features[i].properties };
         }
         //2 selections for data available and not available
         let areas2 = areasFeatureCollectionCopy.features.filter((area1) => {
           return zipCodeSet2.has(area1.properties.zipcode);
         });
-        
+
         let areasclass = areasFeatureCollectionCopy.features.filter((area2) => {
           return classCodeSet.has(area2.properties.zipcode);
         });
@@ -315,37 +315,37 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
 
         const maxClassValue = d3.max(classValues)
         //Function for finding correct class value corresponding to zip code
-        function findvaluenow(array,searchvalue) {
-        	for (let j = 0; j < array.length; j++) {
-          		if (array[j].zipsCode == searchvalue) {
-            
-           			return array[j].classValue;
-          		}
-          
-        	};
+        function findvaluenow(array, searchvalue) {
+          for (let j = 0; j < array.length; j++) {
+            if (array[j].zipsCode == searchvalue) {
+
+              return array[j].classValue;
+            }
+
+          };
         }
 
         //No data available is black
         for (i = 0; i < areas2.length; i++) {
-          	areas2[i].color = rgbToHex(0,0,0);
-          	areas2[i].label = 'No racial profling index available for this zip code'
+          areas2[i].color = rgbToHex(0, 0, 0);
+          areas2[i].label = 'No racial profling index available for this zip code'
         }
         // Data available is scaled from green to red
         for (i = 0; i < areasclass.length; i++) {
 
-          	classValueNow = findvaluenow(classes,areasclass[i].properties.zipcode)
+          classValueNow = findvaluenow(classes, areasclass[i].properties.zipcode)
 
-          	if (classValueNow < 1) {
-            	areasclass[i].color = rgbToHex(100,255,100);
-          	} else {
-              	r = Math.round(classValueNow/maxClassValue*(255-100))+100
-              	g = 255-Math.round(classValueNow/maxClassValue*(255-100))
-              	b = 100
-              	areasclass[i].color = rgbToHex(r,g,b)
-          	};
-          	areasclass[i].label = 'The racial profiling index for this zip code is ' + parseFloat(classValueNow).toFixed(3) 
+          if (classValueNow < 1) {
+            areasclass[i].color = rgbToHex(100, 255, 100);
+          } else {
+            r = Math.round(classValueNow / maxClassValue * (255 - 100)) + 100
+            g = 255 - Math.round(classValueNow / maxClassValue * (255 - 100))
+            b = 100
+            areasclass[i].color = rgbToHex(r, g, b)
+          };
+          areasclass[i].label = 'The racial profiling index for this zip code is ' + parseFloat(classValueNow).toFixed(3)
         }
-        
+
 
         //Generate map with mouseover effect
         var areaPathss = heatMap.selectAll('path')
@@ -354,35 +354,20 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .append('path')
           .attr('d', heatPath)
           .style('fill', d => d.color)
-          .on("mouseover", function(d) {		
-            div2.transition()		
-                .duration(200)	
-                .style("opacity", .9);		
-            div2.html(d.label)	
-                .style("left", (d3.event.pageX) + "px")		
-                .style("top", (d3.event.pageY - 28) + "px");	
-            })					
-          .on("mouseout", function(d) {		
-            div2.transition()		
-                .duration(500)		
-                .style("opacity", 0);	
-        });
-
+          .on("mouseover", function (d) {
+            div2.transition()
+              .duration(200)
+              .style("opacity", .9);
+            div2.html(d.label)
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function (d) {
+            div2.transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
       });
-      let randomHexColor = function () {
-        let rgbColor = [0, 0, 0].map(() => Math.floor(Math.random() * 255));
-        return rgbToHex(...rgbColor);
-      };
-
-
-      // Assign colors to areas
-      // let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
-      for (let i = 0; i < areas.length; i++) {
-        areas[i].color = randomHexColor();
-      }
-      // DELETE ABOVE
-
-
 
       var rowIndex = rowExtractor(zipToBeLoaded, zips);
       row = zips[rowIndex];
@@ -653,6 +638,21 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
         updatePercentageBarChart();
       };
 
+      // let randomHexColor = function () {
+      //   let rgbColor = [0, 0, 0].map(() => Math.floor(Math.random() * 255));
+      //   return rgbToHex(...rgbColor);
+      // };
+
+      // // Assign colors to areas
+      // // let boroughColors = ['#BA7D34', '#23CE6B', '#4286f4', '#A846A0', '#50514F'];
+      // for (let i = 0; i < areas.length; i++) {
+      //   areas[i].color = randomHexColor();
+      // }
+
+      // for (let i = 0; i < areas.length; i++) {
+
+      // }
+      // // DELETE ABOVE
       let areaPaths = map.selectAll('path')
         .data(areas)
         .enter()
@@ -664,6 +664,78 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           redrawDetailView(d);
           updateBarChart(d.properties.zipcode);
         });
+
+      // let center = [mapDims.w / 2, mapDims.h / 2];
+      // let hypotenuse = Math.sqrt(Math.pow(mapDims.w, 2) + Math.pow(mapDims.h, 2));
+      // map.selectAll('path')
+      //   .style('fill', (d) => {
+      //     // Calculate distance to center
+      //     let centroid = path.centroid(d);
+      //     console.log(centroid);
+      //     let invertedDistance = 1 / Math.sqrt(Math.pow(centroid[0] - center[0], 2) + Math.pow(centroid[1] - center[1], 2));
+      //     invertedDistance *= 100000;
+      //     let normalizedDistance = invertedDistance / hypotenuse;
+      //     console.log(normalizedDistance);
+
+      //     return `rgb(0, 60, ${255 * normalizedDistance}`;
+      //   });
+
+      let centerArea;
+      areaPaths.each((ap) => {
+        if (ap.properties.zipcode == "78722") {
+          centerArea = ap;
+          return
+        }
+      });
+      if (!centerArea) {
+        console.log("not found");
+      }
+
+      let noArrests = arrests.length;
+      var colorScale = d3.scaleLinear()
+        .domain([1, noArrests/10])
+        .range(["rgb(0, 100, 200)", "rgb(0, 200, 255)"]);
+
+      map.selectAll('path')
+        .style('fill', (d) => {
+          let curArrests = arrests.filter((a) => {
+            return a.zipCode === d.properties.zipcode;
+          });
+
+          let scale = curArrests.length / noArrests;
+
+          const color = colorScale(curArrests.length);
+          console.log(color);
+          
+          return color;
+
+          // console.log(scale);
+
+          // const color = `rgb(${10 * scale * 10}, ${50 * scale * 100}, ${255 * scale * 100})`;
+          // console.log(color);
+          // return color;
+
+          // return `rgb(0, 100, ${255 * scale * 10})`;
+        });
+
+      // let center = path.centroid(centerArea);
+      // let hypotenuse = Math.sqrt(Math.pow(mapDims.w, 2) + Math.pow(mapDims.h, 2));
+      // console.log(hypotenuse);
+      // arrests
+      // map.selectAll('path')
+      //   .style('fill', (d) => {
+      //     // Calculate distance to center
+      //     let centroid = path.centroid(d);
+      //     // console.log(centroid);
+      //     let distance = Math.sqrt(Math.pow(centroid[0] - center[0], 2) + Math.pow(centroid[1] - center[1], 2));
+      //     console.log(distance);
+
+      //     const color = `rgb(0, 30, ${255 / (255 * 0.1 * (distance / hypotenuse))})`;
+      //     // const color = `rgb(0, 30, ${255 * (distance / 400)})`;
+      //     console.log(color);
+
+      //     return color;
+      //   });
 
       const redrawDetailView = function (feature) {
         const zipCode = feature.properties.zipcode;
@@ -691,7 +763,13 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .enter()
           .append('path')
           .attr('d', detailPath)
-          .style('fill', d => d.color);
+          .style('fill', (d) => {
+            let curArrests = arrests.filter((a) => {
+              return a.zipCode === feature.properties.zipcode;
+            });
+
+            return colorScale(curArrests.length);
+          });
 
         // Redraw data points
         let datapoints = redrawDetailDataPoints(feature);
@@ -746,12 +824,12 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       };
 
       resetDetailDataPoints();
-      var result = areas.filter(function( obj ) {
-          
+      var result = areas.filter(function (obj) {
+
         return obj.properties.zipcode == zipToBeLoaded;
       });
-      
-      
+
+
       redrawDetailView(result[0]);
 
       function resized() {
@@ -805,17 +883,17 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
           .scale(xScale)
       };
 
-      d3.selectAll(".updateZip").on("click", function(){
+      d3.selectAll(".updateZip").on("click", function () {
         zipToUpdate = this.value;
-        var result = areas.filter(function( obj ) {
-          
+        var result = areas.filter(function (obj) {
+
           return obj.properties.zipcode == zipToUpdate;
         });
-        
-        
+
+
         redrawDetailView(result[0]);
         updateBarChart(this.value);
-        
+
       });
       function handleMouseOver(d, i) {
         var hoverColor;
