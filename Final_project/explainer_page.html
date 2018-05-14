@@ -192,8 +192,32 @@
                         <b>introductory text</b> is given to introduce the reader to the problem at hand, and
                         <b>captions and headlines</b> throughout the article communicates observations and progress throughout
                         the article.
-                        <h2>Visualizations DU SKAL SKRIVE NOGET I DETTE AFSNIT SEBASTIAN</h2>
-                        Explain the visualizations you’ve chosen. Why are they right for the story you want to tell?
+                        <h2>Visualizations</h2>
+                        
+                        While the overall structure of the visualization relies heavily on the author-driven approach in its rigidity and linearity, our visualizations serve as entry-points for reader-driven interaction, providing the reader with details-on-demand and filtering options. The overall structure resembles the Martini-Glass Structure with its author-driven content coupled with reader-driven interaction and finally supporting the conclusion using an interactive visualization.<br/><br/>
+                        
+                        This section will serve as an overview of the types of visualizations that were utilized in the narrative.
+                        
+                        <h3>The Choropleth</h3>
+                        
+                        Two choropleths are implemented, each based on the same geographic partitioning of the city of Austin. Representing the exact same geographic space in two choropleths with two different statistics is perhaps our most powerful visual tool, as it enables for a reader-driven comparison by simply comparing the color encodings of each pair of areas. This interaction involves the reader by allowing them to make their own conclusions while providing additional support for the conclusions found in the text.
+                        
+                        In our visualization, the choropleths depict the proportion of traffic stops to total traffic stops, and our own racial profiling index respectively. The placement of the choropleths, bookending the narration, signifies the progress of the analysis and motivates the reader to return to the starting point of the narration.
+                        
+                        The first choropleth uses color-coded areas to emphasize zip codes with a relatively high number of traffic stops. In enabling an interaction between the first choropleth and the bar chart, we are providing the reader with options to filter the data and receive details on demand.
+                        
+                        <h3>The Bar Chart</h3>
+                        
+                        The bar chart is a typical example of an interactive, annotated graph. The graph is tightly coupled with the interactive choropleth, visualizing only the area the reader has currently selected. A label updates according to the input, depicting the zip code of the currently evaluated area.
+                        
+                        The bar chart represents information using color-coding and tooltips. The scale of the data varies wildly, as some zip codes have exceedingly few traffic stops. To emphasize this difference to the reader, a label is at all times showing with the total number of stops showcased in the bar chart. This is an alternative to normalizing the data and allows the reader to make informed comparisons.
+                        
+                        The combination of the first choropleth and the bar chart leans towards the drill-down structure, enabling the user to receive more detailed information about an area that they may select themselves.
+                        
+                        <h3>The SVM Classifier Heat Map/Scatter Plot</h3>
+
+                        This is the only non-interactive visualization in the narrative. The purpose of the visualization is primarily analytical and allows the authors to discover whether the racial profiling index can be predicted based on socio-economic factors.
+                        The visualization is structured as a heat map with discrete color levels encoding the probability of the projection of an observation onto the first two principal components belonging to class 1 (racial profiling index > 1). The combination of a scatter plot and a heat map allows the reader to evaluate the performance of the classifier visually by evaluating the separation of observations.
                         <h2>Discussion</h2>
                         White dominated arrests seems to be influenced by socio-economic factors, which is quite common. Due to our lack of preacquired knowledge, the data was not transformed to take care of this, which could have given the conclusion an even stronger basis. Luckily, non-white arrests where not that dependent on socio-economic factors, so our assumptions on traditional racial profiling still stands.
                         The racial profiling index is only our own idea, and with more time a proper social science index could have been chosen with aspect to scientific articles. With more time, a transformation of the data to handle socio-economic factors could be done as well.
@@ -209,7 +233,7 @@
                              <h2>Contributions</h2>
                             <p>
                                 <b>Sebastian Frelle Koch:</b> Interactive map of Austin and detailed map for each zip-code with
-                                data points.
+                                data points. Explainer page section on "Visualizations".
                             </p>
                             <p>
                                 <b>Jakob Thorsbro:</b> Data analysis and preparation including converting all State Plane Coordinates

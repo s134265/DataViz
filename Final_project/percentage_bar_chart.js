@@ -694,7 +694,7 @@ d3.json(zipCodeAreasPath, (err, areasFeatureCollection) => {
       let noArrests = arrests.length;
       var colorScale = d3.scaleLinear()
         .domain([1, noArrests/10])
-        .range(["rgb(0, 100, 200)", "rgb(0, 200, 255)"]);
+        .range(["rgb(50, 100, 200)", "rgb(100, 200, 255)"]);
 
       map.selectAll('path')
         .style('fill', (d) => {
